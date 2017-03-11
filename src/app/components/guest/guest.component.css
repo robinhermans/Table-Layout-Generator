@@ -1,0 +1,69 @@
+table {
+  width: 100%;
+}
+
+tbody {
+  display:block;
+  height:300px;
+  overflow:auto;
+}
+
+thead, tbody tr {
+  display:table;
+  width:100%;
+}
+
+header {
+  display: flex;
+}
+
+h1 {
+  flex: 9;
+  margin: 0;
+  padding: 0;
+}
+
+.close {
+  flex: 1;
+}
+
+th {
+  text-align: left;
+}
+
+.container {
+  width: 600px;
+  height: 425px;
+}
+
+.small-header {
+  width: 75px;
+}
+
+.small {
+  width: 75px;
+  text-align: center;
+}
+
+.action-header {
+  width: 90px;
+}
+
+.form {
+  display: flex;
+  flex: auto;
+  overflow: hidden;
+}
+
+.name {
+  flex: 6;
+}
+
+md-input-container{
+  width: 95%;
+}
+
+.other {
+  flex: 4;
+  line-height: 55px;
+}

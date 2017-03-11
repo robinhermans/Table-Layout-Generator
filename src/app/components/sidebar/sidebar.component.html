@@ -1,0 +1,34 @@
+<h3>Guests</h3>
+<table class="table">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th class="small-header">Meat</th>
+      <th class="small-header">Fish</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let guest of tableService.guests">
+      <td>{{guest.name}}</td>
+      <td class="small">
+        <md-checkbox [ngModel]="guest.eatsMeat" disabled></md-checkbox>
+      </td>
+      <td class="small">
+        <md-checkbox [ngModel]="guest.eatsFish" disabled></md-checkbox>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<button md-button (click)="openGuestsDialog()">Manage Guests</button>
+
+
+<h3>Settings</h3>
+<label>Tables ( {{tableService.tableCount}} )</label><br/>
+<md-slider min="1" max="12" step="1" [(ngModel)]="tableService.tableCount"></md-slider>
+<br/>
+<label>Courses ( {{tableService.courseCount}} )</label><br/>
+<md-slider min="1" max="12" step="1" [(ngModel)]="tableService.courseCount"></md-slider>
+<md-checkbox [(ngModel)]="tableService.neverSameTable">Never sit at the same table</md-checkbox>
+<md-checkbox [(ngModel)]="tableService.neverSamePeople">Never sit with the same guests</md-checkbox>
+

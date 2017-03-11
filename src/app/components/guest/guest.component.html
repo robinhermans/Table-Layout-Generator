@@ -1,0 +1,48 @@
+<div class="container">
+  <header>
+    <h1>Guests</h1>
+    <div class="close">
+      <button md-button (click)="close()">X</button>
+    </div>
+  </header>
+
+  <table class="table">
+    <thead>
+    <tr>
+      <th>Name</th>
+      <th class="small-header">Meat</th>
+      <th class="small-header">Fish</th>
+      <th class="action-header"></th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let guest of tableService.guests | reverse">
+      <td>{{guest.name}}</td>
+      <td class="small">
+        <md-checkbox [(ngModel)]="guest.eatsMeat"></md-checkbox>
+      </td>
+      <td class="small">
+        <md-checkbox [(ngModel)]="guest.eatsFish"></md-checkbox>
+      </td>
+      <td class="small">
+        <button md-button (click)="removeGuest(guest.id)">Delete</button>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+
+  <hr>
+
+  <div class="form">
+    <div class="name">
+      <md-input-container>
+        <input mdInput placeholder="Guest name" [(ngModel)]="guestModel.name">
+      </md-input-container>
+    </div>
+    <div class="other">
+      <md-checkbox [(ngModel)]="guestModel.eatsMeat">Meat</md-checkbox>
+      <md-checkbox [(ngModel)]="guestModel.eatsFish">Fish</md-checkbox>
+      <button md-button (click)="addGuest()">Add Guest</button>
+    </div>
+  </div>
+</div>

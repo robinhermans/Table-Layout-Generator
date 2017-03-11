@@ -1,0 +1,33 @@
+table {
+  width: 100%;
+}
+
+tbody {
+  display:block;
+  height:200px;
+  overflow:auto;
+}
+
+thead, tbody tr {
+  display:table;
+  width:100%;
+}
+
+th {
+  text-align: left;
+}
+
+button {
+  color: white;
+  background-color: #34495e;
+  width: 100%;
+}
+
+.small-header {
+  width: 75px;
+}
+
+.small {
+  width: 75px;
+  text-align: center;
+}
