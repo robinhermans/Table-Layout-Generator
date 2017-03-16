@@ -1,22 +1,28 @@
+<h3>Course</h3>
+<md-select [(ngModel)]="tableService.currentCourse">
+  <md-option *ngFor="let course of tableService.courses" [value]="course.id">
+    Course {{ course.id + 1}}
+  </md-option>
+</md-select>
 <h3>Guests</h3>
 <table class="table">
   <thead>
-    <tr>
-      <th>Name</th>
-      <th class="small-header">Meat</th>
-      <th class="small-header">Fish</th>
-    </tr>
+  <tr>
+    <th>Name</th>
+    <th class="small-header">Meat</th>
+    <th class="small-header">Fish</th>
+  </tr>
   </thead>
   <tbody>
-    <tr *ngFor="let guest of tableService.guests">
-      <td>{{guest.name}}</td>
-      <td class="small">
-        <md-checkbox [ngModel]="guest.eatsMeat" disabled></md-checkbox>
-      </td>
-      <td class="small">
-        <md-checkbox [ngModel]="guest.eatsFish" disabled></md-checkbox>
-      </td>
-    </tr>
+  <tr *ngFor="let guest of tableService.guests">
+    <td>{{guest.name}}</td>
+    <td class="small">
+      <md-checkbox [ngModel]="guest.eatsMeat" disabled></md-checkbox>
+    </td>
+    <td class="small">
+      <md-checkbox [ngModel]="guest.eatsFish" disabled></md-checkbox>
+    </td>
+  </tr>
   </tbody>
 </table>
 
@@ -28,7 +34,17 @@
 <md-slider min="1" max="12" step="1" [(ngModel)]="tableService.tableCount"></md-slider>
 <br/>
 <label>Courses ( {{tableService.courseCount}} )</label><br/>
-<md-slider min="1" max="12" step="1" [(ngModel)]="tableService.courseCount"></md-slider>
-<md-checkbox [(ngModel)]="tableService.neverSameTable">Never sit at the same table</md-checkbox>
-<md-checkbox [(ngModel)]="tableService.neverSamePeople">Never sit with the same guests</md-checkbox>
+<md-slider min="1" max="6" step="1" [(ngModel)]="tableService.courseCount"></md-slider>
+<div *ngIf="enableSameGuestOption()">
+  <md-checkbox [(ngModel)]="tableService.neverSameTable">Never sit at the same table</md-checkbox>
+</div>
+<div *ngIf="!enableSameGuestOption()">
+  <md-checkbox disabled><s>Never sit at the same table</s></md-checkbox>
+</div>
+<div *ngIf="enableSameTableOption()">
+  <md-checkbox [(ngModel)]="tableService.neverSamePeople">Never sit with the same guests</md-checkbox>
+</div>
+<div *ngIf="!enableSameTableOption()">
+  <md-checkbox disabled><s>Never sit with the same guests</s></md-checkbox>
+</div>
 

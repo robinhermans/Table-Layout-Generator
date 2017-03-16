@@ -1,6 +1,6 @@
 import {Chair} from "./chair.entity";
 
 export interface Table {
-  id: Number,
+  id: number,
   chairs: Array<Chair>
 }

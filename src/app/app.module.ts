@@ -9,7 +9,7 @@ import {CanvasComponent} from "./components/canvas/canvas.component";
 import {SidebarComponent} from "./components/sidebar/sidebar.component";
 import {TableService} from "./services/table.service";
 import {GuestComponent} from "./components/guest/guest.component";
-import {ReversePipe} from "./pipes/ReversePipe";
+import {ReversePipe} from "./pipes/reverse.pipe";
 
 @NgModule({
   declarations: [

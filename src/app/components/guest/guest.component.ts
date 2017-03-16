@@ -21,20 +21,20 @@ export class GuestComponent {
     this._guestModel = {id: null, name: null, eatsMeat: true, eatsFish: true} as Guest;
   }
 
+  public addGuest(): void {
+    let id: number = this._tableService.guests.length;
+    this._guestModel.id = id;
+    this._tableService.addGuest(this._guestModel);
+    this._guestModel = {id: null, name: null, eatsMeat: true, eatsFish: true} as Guest;
+  }
+
   public removeGuest(id: number): void {
     for (var i = 0; i < this._tableService.guests.length; i++) {
       let guest: Guest = this._tableService.guests[i];
       if (guest.id == id) {
-        this._tableService.guests.splice(i, 1);
+        this._tableService.removeGuest(i);
       }
     }
-  }
-
-  public addGuest(): void {
-    let id: number = this._tableService.guests.length;
-    this._guestModel.id = id;
-    this._tableService.guests.push(this._guestModel);
-    this._guestModel = {id: null, name: null, eatsMeat: true, eatsFish: true} as Guest;
   }
 
   public close(): void {
