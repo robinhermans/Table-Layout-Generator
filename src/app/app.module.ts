@@ -10,6 +10,7 @@ import {SidebarComponent} from "./components/sidebar/sidebar.component";
 import {TableService} from "./services/table.service";
 import {GuestComponent} from "./components/guest/guest.component";
 import {ReversePipe} from "./pipes/reverse.pipe";
+import {PdfService} from "./services/pdf.service";
 
 @NgModule({
   declarations: [
@@ -30,7 +31,8 @@ import {ReversePipe} from "./pipes/reverse.pipe";
     GuestComponent
   ],
   providers: [
-    TableService
+    TableService,
+    PdfService
   ],
   bootstrap: [AppComponent]
 })

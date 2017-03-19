@@ -35,16 +35,16 @@
 <br/>
 <label>Courses ( {{tableService.courseCount}} )</label><br/>
 <md-slider min="1" max="6" step="1" [(ngModel)]="tableService.courseCount"></md-slider>
-<div *ngIf="enableSameGuestOption()">
-  <md-checkbox [(ngModel)]="tableService.neverSameTable">Never sit at the same table</md-checkbox>
-</div>
-<div *ngIf="!enableSameGuestOption()">
-  <md-checkbox disabled><s>Never sit at the same table</s></md-checkbox>
-</div>
-<div *ngIf="enableSameTableOption()">
-  <md-checkbox [(ngModel)]="tableService.neverSamePeople">Never sit with the same guests</md-checkbox>
-</div>
-<div *ngIf="!enableSameTableOption()">
-  <md-checkbox disabled><s>Never sit with the same guests</s></md-checkbox>
-</div>
+<md-checkbox [(ngModel)]="tableService.neverSameTable" [disabled]="!enableSameTableOption()">
+  <s *ngIf="!enableSameTableOption()">Never sit at the same table</s>
+  <span *ngIf="enableSameTableOption()">Never sit at the same table</span>
+</md-checkbox>
+<md-checkbox [(ngModel)]="tableService.neverSameGuests" [disabled]="!enableSameGuestsOption()">
+  <s *ngIf="!enableSameGuestsOption()">Never sit with the same guests</s>
+  <span *ngIf="enableSameGuestsOption()">Never sit with the same guests</span>
+</md-checkbox>
+
+<h3>Export</h3>
+<button md-button (click)="pdfService.generatePdf()">Generate PDF</button>
+
 

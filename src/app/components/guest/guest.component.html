@@ -1,10 +1,13 @@
 <div class="container">
   <header>
     <h1>Guests</h1>
-    <div class="close">
-      <button md-button (click)="close()">X</button>
-    </div>
+    <button md-button (click)="openFileDialog()">Import</button>
+    <input #file id="file" type="file" (change)="import($event)"/>
+    <button md-button (click)="export()">Export</button>
+    <button md-button (click)="close()">X</button>
   </header>
+
+  <hr>
 
   <table class="table">
     <thead>
@@ -42,7 +45,7 @@
     <div class="other">
       <md-checkbox [(ngModel)]="guestModel.eatsMeat">Meat</md-checkbox>
       <md-checkbox [(ngModel)]="guestModel.eatsFish">Fish</md-checkbox>
-      <button md-button (click)="addGuest()">Add Guest</button>
+      <button md-button (click)="addGuest()" [disabled]="!guestModel.name">Add Guest</button>
     </div>
   </div>
 </div>

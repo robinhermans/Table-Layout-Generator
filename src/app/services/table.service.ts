@@ -13,7 +13,7 @@ export class TableService {
   private _tableCount: number;
   private _courseCount: number;
   private _neverSameTable: boolean;
-  private _neverSamePeople: boolean;
+  private _neverSameGuests: boolean;
   private _courseSubject: Subject<Array<Course>>;
 
   constructor() {
@@ -23,7 +23,7 @@ export class TableService {
     this._tableCount = 6;
     this._courseCount = 3;
     this._neverSameTable = true;
-    this._neverSamePeople = true;
+    this._neverSameGuests = true;
     this._courseSubject = new Subject();
 
     this.loadTestData();
@@ -59,35 +59,45 @@ export class TableService {
   }
 
   public generateLayout(): void {
+    if (this.guests == null || this.guests.length == 0)
+      return;
+
     if (this._currentCourse > this._courseCount - 1)
       this._currentCourse = (this._courseCount - 1);
 
     this._courses = new Array();
 
     for (let c: number = 0; c < this._courseCount; c++) {
-      this._courses.push({id: c, tables: this.generateTables()});
+      this._courses.push({id: c, tables: this.generateRandom()});
     }
 
     this._courseSubject.next(this._courses);
   }
 
-  private generateTables(): Array<Table> {
+  private generateRandom(): Array<Table> {
+    let shuffeldGuests = Array.from(this._guests);
+
+    for (let i = shuffeldGuests.length; i; i--) {
+      let j = Math.floor(Math.random() * i);
+      [shuffeldGuests[i - 1], shuffeldGuests[j]] = [shuffeldGuests[j], shuffeldGuests[i - 1]];
+    }
+
     let tables: Array<Table> = new Array();
     let currentCount: number = 0;
 
-    while (currentCount < this._guests.length) {
+    while (currentCount < shuffeldGuests.length) {
       for (let t = 0; t < this._tableCount; t++) {
         let table: Table = tables[t];
         if (!table) {
           table = {id: t + 1, chairs: new Array()} as Table;
         }
 
-        table.chairs.push({id: currentCount, guest: this._guests[currentCount]});
+        table.chairs.push({id: currentCount, guest: shuffeldGuests[currentCount]});
 
         tables[t] = table;
 
         currentCount++;
-        if (currentCount == this._guests.length) {
+        if (currentCount == shuffeldGuests.length) {
           break;
         }
       }
@@ -130,7 +140,7 @@ export class TableService {
 
   set currentCourse(value: number) {
     this._currentCourse = value;
-    this.generateLayout();
+    this._courseSubject.next(this._courses);
   }
 
   get tableCount(): number {
@@ -160,12 +170,12 @@ export class TableService {
     this.generateLayout();
   }
 
-  get neverSamePeople(): boolean {
-    return this._neverSamePeople;
+  get neverSameGuests(): boolean {
+    return this._neverSameGuests;
   }
 
-  set neverSamePeople(value: boolean) {
-    this._neverSamePeople = value;
+  set neverSameGuests(value: boolean) {
+    this._neverSameGuests = value;
     this.generateLayout();
   }
 

@@ -33,7 +33,7 @@ th {
 
 .container {
   width: 600px;
-  height: 425px;
+  height: 450px;
 }
 
 .small-header {
@@ -66,4 +66,8 @@ md-input-container{
 .other {
   flex: 4;
   line-height: 55px;
+}
+
+#file {
+  display: none;
 }

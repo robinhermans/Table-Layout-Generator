@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, ViewChild, ElementRef} from '@angular/core';
 import {MdDialogRef} from '@angular/material';
 import {TableService} from "../../services/table.service";
 import {Guest} from "../../entities/guest.entity";
@@ -10,9 +10,11 @@ import {Guest} from "../../entities/guest.entity";
 })
 export class GuestComponent {
 
+  @ViewChild("file")
+  private _fileInput: ElementRef;
+
   private _dialogReference: MdDialogRef<GuestComponent>;
   private _tableService: TableService;
-
   private _guestModel: Guest;
 
   constructor(dialogReference: MdDialogRef<GuestComponent>, tableService: TableService) {
@@ -22,6 +24,9 @@ export class GuestComponent {
   }
 
   public addGuest(): void {
+    if(!this._guestModel.name || this._guestModel.name == "")
+      return;
+
     let id: number = this._tableService.guests.length;
     this._guestModel.id = id;
     this._tableService.addGuest(this._guestModel);
@@ -35,6 +40,38 @@ export class GuestComponent {
         this._tableService.removeGuest(i);
       }
     }
+  }
+
+  public openFileDialog(): void {
+    this._fileInput.nativeElement.click();
+  }
+
+  public import(event): void {
+    let self = this;
+    let file = event.target.files[0];
+    var reader = new FileReader();
+
+    reader.onload = function(e) {
+      if(!reader.error) {
+        let guests: Array<Guest> = JSON.parse(reader.result) as Array<Guest>;
+        self._tableService.guests = guests;
+      }
+    }
+
+    reader.readAsText(file);
+  }
+
+  public export(): void {
+    var fileContents = JSON.stringify(this._tableService.guests);
+    var filename = "table_layout_export.json";
+    var filetype = "application/json";
+
+    var a = document.createElement("a");
+    a.href = "data:" + filetype + ";base64," + btoa(fileContents);
+    a['download'] = filename;
+    var e = document.createEvent("MouseEvents");
+    e.initMouseEvent("click", true, false, document.defaultView, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
+    a.dispatchEvent(e);
   }
 
   public close(): void {

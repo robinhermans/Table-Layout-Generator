@@ -1,4 +1,4 @@
-import {Component, ViewChild, ElementRef} from '@angular/core';
+import {Component, ViewChild, ElementRef, HostListener} from '@angular/core';
 import {TableService} from "../../services/table.service";
 import {Table} from "../../entities/table.entity";
 import {Course} from "../../entities/course.entity";
@@ -28,7 +28,12 @@ export class CanvasComponent {
     });
   }
 
-  ngAfterViewInit() {
+  @HostListener('window:resize', ['$event'])
+  private onResize(event): void {
+    this.ngAfterViewInit();
+  }
+
+  private ngAfterViewInit(): void {
     this._context = this._screen.nativeElement.getContext("2d");
     this._width = this._context.canvas.offsetWidth;
     this._height = this._context.canvas.offsetHeight;
@@ -53,11 +58,12 @@ export class CanvasComponent {
 
     let currentCourse: Course = this._tableService.courses[this._tableService.currentCourse];
     let tables: Array<Table> = currentCourse.tables;
+    let tableCount: number = tables.length;
     let yStep: number = this._height / 3;
-    let xStep: number = this._width / Math.ceil(this._tableService.tableCount / 3);
+    let xStep: number = this._width / Math.ceil(tableCount / 3);
     let currentCount: number = 0;
 
-    while (currentCount < this._tableService.tableCount) {
+    while (currentCount < tableCount) {
 
       if (tables.length == 1) {
         this.drawTable(xStep / 2, yStep * 1.5, tables[currentCount]);
@@ -76,7 +82,7 @@ export class CanvasComponent {
             this.drawTable(x, y, tables[currentCount]);
 
             currentCount++;
-            if (currentCount == this._tableService.tableCount) {
+            if (currentCount == tableCount) {
               break;
             }
           }
@@ -88,14 +94,15 @@ export class CanvasComponent {
   private drawTable(x: number, y: number, table: Table) {
     this._context.drawImage(this._tableImage, x - 64, y - 64);
 
-    this._context.font = "24px Arial";
+    this._context.font = "24px Roboto";
     this._context.textAlign = "center";
     this._context.fillText("Table " + table.id, x, y + 8);
 
-    let rotation: number = 0;
+    let rotation: number = Math.PI / 4;
     let step = Math.PI * 2 / table.chairs.length;
 
     this._context.translate(x, y);
+    this._context.rotate(rotation);
 
     for (var count = 0; count < table.chairs.length; count++) {
       this._context.rotate(step);
@@ -106,12 +113,12 @@ export class CanvasComponent {
       let name: string = table.chairs[count].guest.name;
       if (rotation >= (Math.PI / 2) && rotation <= (Math.PI * 1.5)) {
         this._context.rotate(Math.PI);
-        this._context.font = "14px Arial";
+        this._context.font = "14px Roboto";
         this._context.textAlign = "left";
         this._context.fillText(name, -95 - this._context.measureText(name).width, 5);
         this._context.rotate(-Math.PI);
       } else {
-        this._context.font = "14px Arial";
+        this._context.font = "14px Roboto";
         this._context.textAlign = "left";
         this._context.fillText(name, 95, 5);
       }
