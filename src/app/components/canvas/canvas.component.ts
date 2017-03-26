@@ -92,7 +92,7 @@ export class CanvasComponent {
       } else {
         if (tables.length == 2) {
           this.drawTable(xStep / 2, yStep, tables[currentCount]);
-          this.drawTable(xStep / 2, yStep * 2, tables[currentCount]);
+          this.drawTable(xStep / 2, yStep * 2, tables[currentCount+1]);
           currentCount += 2;
           break;
         } else {
