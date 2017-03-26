@@ -2,6 +2,7 @@ import {Component, ViewChild, ElementRef, HostListener} from '@angular/core';
 import {TableService} from "../../services/table.service";
 import {Table} from "../../entities/table.entity";
 import {Course} from "../../entities/course.entity";
+import {Chair} from "../../entities/chair.entity";
 
 @Component({
   selector: 'canvas-component',
@@ -19,6 +20,10 @@ export class CanvasComponent {
   private _height: number;
   private _tableImage: any;
   private _chairImage: any;
+  private _plateImage: any;
+  private _fishImage: any;
+  private _meatImage: any;
+  private _fishMeatImage: any;
 
   constructor(tableService: TableService) {
     this._tableService = tableService;
@@ -46,7 +51,23 @@ export class CanvasComponent {
     this._tableImage.onload = function () {
       self._chairImage = new Image();
       self._chairImage.onload = function () {
-        self.draw();
+        self._plateImage = new Image();
+        self._plateImage.onload = function () {
+          self._fishImage = new Image();
+          self._fishImage.onload = function () {
+            self._meatImage = new Image();
+            self._meatImage.onload = function () {
+              self._fishMeatImage = new Image();
+              self._fishMeatImage.onload = function () {
+                self.draw();
+              }
+              self._fishMeatImage.src = "assets/images/fishmeat.png";
+            }
+            self._meatImage.src = "assets/images/meat.png";
+          }
+          self._fishImage.src = "assets/images/fish.png";
+        }
+        self._plateImage.src = "assets/images/plate.png";
       };
       self._chairImage.src = "assets/images/chair.png";
     };
@@ -92,8 +113,15 @@ export class CanvasComponent {
   }
 
   private drawTable(x: number, y: number, table: Table) {
-    this._context.drawImage(this._tableImage, x - 64, y - 64);
+    let randomRotate: number = Math.random() * (8 - 1) + 1;
+    console.log(randomRotate);
+    this._context.save();
+    this._context.translate(x, y);
+    this._context.rotate(((Math.PI/ 4) * randomRotate));
+    this._context.drawImage(this._tableImage, - 64, - 64);
+    this._context.restore();
 
+    this._context.fillStyle = "white";
     this._context.font = "24px Roboto";
     this._context.textAlign = "center";
     this._context.fillText("Table " + table.id, x, y + 8);
@@ -101,6 +129,7 @@ export class CanvasComponent {
     let rotation: number = Math.PI / 4;
     let step = Math.PI * 2 / table.chairs.length;
 
+    this._context.save();
     this._context.translate(x, y);
     this._context.rotate(rotation);
 
@@ -108,23 +137,35 @@ export class CanvasComponent {
       this._context.rotate(step);
       rotation += step;
 
-      this._context.drawImage(this._chairImage, 70, -16);
+      let chair: Chair = table.chairs[count];
 
-      let name: string = table.chairs[count].guest.name;
+      this._context.drawImage(this._chairImage, 70, -16);
+      this._context.drawImage(this._plateImage, 45, -9);
+
+      if(chair.guest.eatsFish && chair.guest.eatsMeat){
+        this._context.drawImage(this._fishMeatImage, 50, -8);
+      }
+      if(chair.guest.eatsFish && !chair.guest.eatsMeat){
+        this._context.drawImage(this._fishImage, 50, -8);
+      }
+      if(!chair.guest.eatsFish && chair.guest.eatsMeat){
+        this._context.drawImage(this._meatImage, 50, -8);
+      }
+
+      let name: string = chair.guest.name;
+      this._context.fillStyle = "black";
+      this._context.font = "14px Roboto";
+      this._context.textAlign = "left";
       if (rotation >= (Math.PI / 2) && rotation <= (Math.PI * 1.5)) {
         this._context.rotate(Math.PI);
-        this._context.font = "14px Roboto";
-        this._context.textAlign = "left";
         this._context.fillText(name, -95 - this._context.measureText(name).width, 5);
         this._context.rotate(-Math.PI);
       } else {
-        this._context.font = "14px Roboto";
-        this._context.textAlign = "left";
         this._context.fillText(name, 95, 5);
       }
     }
 
-    this._context.setTransform(1, 0, 0, 1, 0, 0);
+    this._context.restore();
   }
 
   get width(): number {
