@@ -3,6 +3,7 @@ import {MdDialog, MdDialogConfig, MdDialogRef} from '@angular/material';
 import {TableService} from "../../services/table.service";
 import {GuestComponent} from "../guest/guest.component";
 import {PdfService} from "../../services/pdf.service";
+import {Algorithm} from "../../entities/algorithm.enum";
 
 @Component({
   selector: 'sidebar-component',
@@ -31,28 +32,37 @@ export class SidebarComponent {
     this._dialogRef = this._dialog.open(GuestComponent, config);
 
     this._dialogRef.afterClosed().subscribe(result => {
+      this._tableService.redrawLayout();
       this._dialogRef = null;
     });
   }
 
-  public enableSameGuestsOption(): boolean {
+  public isAlgorithmActive(algorithm: string): boolean {
+    return (Algorithm[algorithm] === this._tableService.algorithm);
+  }
+
+  public setActiveAlgorithm(algorithm: string): void {
+    this._tableService.algorithm = Algorithm[algorithm];
+  }
+
+  public allowUniqueGuests(): boolean {
     if (this._tableService.guests.length > this._tableService.tableCount) {
       let guestsPerTable: number = Math.ceil(this._tableService.guests.length / this._tableService.tableCount);
       if (guestsPerTable > this._tableService.tableCount) {
-        if (this._tableService.neverSameGuests == true)
-          this._tableService.neverSameGuests = false;
+        if (this._tableService.algorithm == Algorithm.UNIQUE_GUESTS)
+          this._tableService.algorithm = Algorithm.RANDOM;
         return false;
       }
     }
     return true;
   }
 
-  public enableSameTableOption(): boolean {
+  public allowUniqueTables(): boolean {
     if (this._tableService.courseCount <= this._tableService.tableCount) {
       return true;
     } else {
-      if (this._tableService.neverSameTable == true)
-        this._tableService.neverSameTable = false;
+      if (this._tableService.algorithm == Algorithm.UNIQUE_TABLES)
+        this._tableService.algorithm = Algorithm.RANDOM;
       return false;
     }
   }

@@ -35,14 +35,13 @@
 <br/>
 <label>Courses ( {{tableService.courseCount}} )</label><br/>
 <md-slider min="1" max="6" step="1" [(ngModel)]="tableService.courseCount"></md-slider>
-<md-checkbox [(ngModel)]="tableService.neverSameTable" [disabled]="!enableSameTableOption()">
-  <s *ngIf="!enableSameTableOption()">Never sit at the same table</s>
-  <span *ngIf="enableSameTableOption()">Never sit at the same table</span>
-</md-checkbox>
-<md-checkbox [(ngModel)]="tableService.neverSameGuests" [disabled]="!enableSameGuestsOption()">
-  <s *ngIf="!enableSameGuestsOption()">Never sit with the same guests</s>
-  <span *ngIf="enableSameGuestsOption()">Never sit with the same guests</span>
-</md-checkbox>
+
+<h3>Algorithm</h3>
+<div class="toggle-container">
+  <button class="toggle-button" [class.toggle-active]="isAlgorithmActive('UNIQUE_TABLES')" (click)="setActiveAlgorithm('UNIQUE_TABLES')" md-button [disabled]="!allowUniqueTables()">Unique table</button>
+  <button class="toggle-button" [class.toggle-active]="isAlgorithmActive('RANDOM')" (click)="setActiveAlgorithm('RANDOM')" md-button>Random</button>
+  <button class="toggle-button" [class.toggle-active]="isAlgorithmActive('UNIQUE_GUESTS')" (click)="setActiveAlgorithm('UNIQUE_GUESTS')" md-button [disabled]="!allowUniqueGuests()">Unique guests</button>
+</div>
 
 <h3>Export</h3>
 <button md-button (click)="pdfService.generatePdf()">Generate PDF</button>

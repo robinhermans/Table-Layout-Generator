@@ -3,6 +3,7 @@ import {Subject} from 'rxjs/Subject'
 import {Course} from "../entities/course.entity";
 import {Guest} from "../entities/guest.entity";
 import {Table} from "../entities/table.entity";
+import {Algorithm} from "../entities/algorithm.enum";
 
 @Injectable()
 export class TableService {
@@ -12,8 +13,7 @@ export class TableService {
   private _currentCourse: number;
   private _tableCount: number;
   private _courseCount: number;
-  private _neverSameTable: boolean;
-  private _neverSameGuests: boolean;
+  private _algorithm: Algorithm;
   private _courseSubject: Subject<Array<Course>>;
 
   constructor() {
@@ -22,8 +22,7 @@ export class TableService {
     this._currentCourse = 0;
     this._tableCount = 6;
     this._courseCount = 3;
-    this._neverSameTable = true;
-    this._neverSameGuests = true;
+    this._algorithm = Algorithm.RANDOM;
     this._courseSubject = new Subject();
 
     this.loadTestData();
@@ -58,46 +57,55 @@ export class TableService {
     this._guests.push({id: 24, name: "Twenty Four", eatsMeat: false, eatsFish: true});
   }
 
+  public redrawLayout(): void {
+    this._courseSubject.next(this._courses);
+  }
+
   public generateLayout(): void {
     if (this.guests == null || this.guests.length == 0)
       return;
 
-    if (this._currentCourse > this._courseCount - 1)
-      this._currentCourse = (this._courseCount - 1);
-
     this._courses = new Array();
 
-    for (let c: number = 0; c < this._courseCount; c++) {
-      this._courses.push({id: c, tables: this.generateRandom()});
+    switch (this._algorithm) {
+      case Algorithm.RANDOM:
+        for (let c: number = 0; c < this._courseCount; c++) {
+          this._courses.push({id: c, tables: this.generateRandom()});
+        }
+        break;
+      case Algorithm.UNIQUE_TABLES:
+        return;
+      case Algorithm.UNIQUE_GUESTS:
+        return;
     }
 
     this._courseSubject.next(this._courses);
   }
 
   private generateRandom(): Array<Table> {
-    let shuffeldGuests = Array.from(this._guests);
+    let shuffledGuests = Array.from(this._guests);
 
-    for (let i = shuffeldGuests.length; i; i--) {
+    for (let i = shuffledGuests.length; i; i--) {
       let j = Math.floor(Math.random() * i);
-      [shuffeldGuests[i - 1], shuffeldGuests[j]] = [shuffeldGuests[j], shuffeldGuests[i - 1]];
+      [shuffledGuests[i - 1], shuffledGuests[j]] = [shuffledGuests[j], shuffledGuests[i - 1]];
     }
 
     let tables: Array<Table> = new Array();
     let currentCount: number = 0;
 
-    while (currentCount < shuffeldGuests.length) {
+    while (currentCount < shuffledGuests.length) {
       for (let t = 0; t < this._tableCount; t++) {
         let table: Table = tables[t];
         if (!table) {
           table = {id: t + 1, chairs: new Array()} as Table;
         }
 
-        table.chairs.push({id: currentCount, guest: shuffeldGuests[currentCount]});
+        table.chairs.push({id: currentCount, guest: shuffledGuests[currentCount]});
 
         tables[t] = table;
 
         currentCount++;
-        if (currentCount == shuffeldGuests.length) {
+        if (currentCount == shuffledGuests.length) {
           break;
         }
       }
@@ -130,6 +138,9 @@ export class TableService {
   }
 
   set courses(value: Array<Course>) {
+    if (this._currentCourse > this._courseCount - 1)
+      this._currentCourse = (this._courseCount - 1);
+
     this._courses = value;
     this.generateLayout();
   }
@@ -161,21 +172,12 @@ export class TableService {
     this.generateLayout();
   }
 
-  get neverSameTable(): boolean {
-    return this._neverSameTable;
+  get algorithm(): Algorithm {
+    return this._algorithm;
   }
 
-  set neverSameTable(value: boolean) {
-    this._neverSameTable = value;
-    this.generateLayout();
-  }
-
-  get neverSameGuests(): boolean {
-    return this._neverSameGuests;
-  }
-
-  set neverSameGuests(value: boolean) {
-    this._neverSameGuests = value;
+  set algorithm(value: Algorithm) {
+    this._algorithm = value;
     this.generateLayout();
   }
 

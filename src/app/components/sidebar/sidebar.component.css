@@ -35,3 +35,17 @@ button {
 md-select {
   width: 100%;
 }
+
+.toggle-container {
+  display: flex;
+}
+
+.toggle-button{
+  flex: 3;
+}
+
+.toggle-active{
+  background-color: #111422;
+  pointer-events: none;
+}
+

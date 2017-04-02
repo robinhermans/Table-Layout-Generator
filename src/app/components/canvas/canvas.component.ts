@@ -114,8 +114,12 @@ export class CanvasComponent {
 
   private drawTable(x: number, y: number, table: Table) {
     let randomRotate: number = Math.random() * (8 - 1) + 1;
-    console.log(randomRotate);
+
     this._context.save();
+    this._context.shadowOffsetX = 5;
+    this._context.shadowOffsetY = 5;
+    this._context.shadowBlur = 10;
+    this._context.shadowColor = "black";
     this._context.translate(x, y);
     this._context.rotate(((Math.PI/ 4) * randomRotate));
     this._context.drawImage(this._tableImage, - 64, - 64);
@@ -138,6 +142,9 @@ export class CanvasComponent {
       rotation += step;
 
       let chair: Chair = table.chairs[count];
+
+      this._context.shadowOffsetX = 0;
+      this._context.shadowOffsetY = 0;
 
       this._context.drawImage(this._chairImage, 70, -16);
       this._context.drawImage(this._plateImage, 45, -9);
@@ -163,6 +170,9 @@ export class CanvasComponent {
       } else {
         this._context.fillText(name, 95, 5);
       }
+
+      this._context.shadowOffsetX = 5;
+      this._context.shadowOffsetY = 5;
     }
 
     this._context.restore();
