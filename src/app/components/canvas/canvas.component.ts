@@ -84,6 +84,14 @@ export class CanvasComponent {
     let xStep: number = this._width / Math.ceil(tableCount / 3);
     let currentCount: number = 0;
 
+    if(currentCourse.tables.length == 0){
+      this._context.fillStyle = "black";
+      this._context.font = "32px Roboto";
+      this._context.textAlign = "center";
+      this._context.fillText("Please add some guests", this._width/2, this.height/2);
+      return;
+    }
+
     while (currentCount < tableCount) {
 
       if (tables.length == 1) {

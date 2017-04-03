@@ -5,26 +5,31 @@
   </md-option>
 </md-select>
 <h3>Guests</h3>
-<table class="table">
-  <thead>
-  <tr>
-    <th>Name</th>
-    <th class="small-header">Meat</th>
-    <th class="small-header">Fish</th>
-  </tr>
-  </thead>
-  <tbody>
-  <tr *ngFor="let guest of tableService.guests">
-    <td>{{guest.name}}</td>
-    <td class="small">
-      <md-checkbox [ngModel]="guest.eatsMeat" disabled></md-checkbox>
-    </td>
-    <td class="small">
-      <md-checkbox [ngModel]="guest.eatsFish" disabled></md-checkbox>
-    </td>
-  </tr>
-  </tbody>
-</table>
+<div *ngIf="tableService.guests.length == 0">
+  <h3 class="info">No guests configured</h3>
+</div>
+<div *ngIf="tableService.guests.length > 0">
+  <table class="table">
+    <thead>
+    <tr>
+      <th>Name</th>
+      <th class="small-header">Meat</th>
+      <th class="small-header">Fish</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let guest of tableService.guests">
+      <td>{{guest.name}}</td>
+      <td class="small">
+        <md-checkbox [ngModel]="guest.eatsMeat" disabled></md-checkbox>
+      </td>
+      <td class="small">
+        <md-checkbox [ngModel]="guest.eatsFish" disabled></md-checkbox>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+</div>
 
 <button md-button (click)="openGuestsDialog()">Manage Guests</button>
 
@@ -38,9 +43,15 @@
 
 <h3>Algorithm</h3>
 <div class="toggle-container">
-  <button class="toggle-button" [class.toggle-active]="isAlgorithmActive('UNIQUE_TABLES')" (click)="setActiveAlgorithm('UNIQUE_TABLES')" md-button [disabled]="!allowUniqueTables()">Unique table</button>
-  <button class="toggle-button" [class.toggle-active]="isAlgorithmActive('RANDOM')" (click)="setActiveAlgorithm('RANDOM')" md-button>Random</button>
-  <button class="toggle-button" [class.toggle-active]="isAlgorithmActive('UNIQUE_GUESTS')" (click)="setActiveAlgorithm('UNIQUE_GUESTS')" md-button [disabled]="!allowUniqueGuests()">Unique guests</button>
+  <button class="toggle-button" [class.toggle-active]="isAlgorithmActive('UNIQUE_TABLES')"
+          (click)="setActiveAlgorithm('UNIQUE_TABLES')" md-button [disabled]="!allowUniqueTables()">Unique table
+  </button>
+  <button class="toggle-button" [class.toggle-active]="isAlgorithmActive('RANDOM')"
+          (click)="setActiveAlgorithm('RANDOM')" md-button>Random
+  </button>
+  <button class="toggle-button" [class.toggle-active]="isAlgorithmActive('UNIQUE_GUESTS')"
+          (click)="setActiveAlgorithm('UNIQUE_GUESTS')" md-button [disabled]="!allowUniqueGuests()">Unique guests
+  </button>
 </div>
 
 <h3>Export</h3>

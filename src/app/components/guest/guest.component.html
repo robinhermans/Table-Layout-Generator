@@ -3,7 +3,7 @@
     <h1>Guests</h1>
     <button md-button (click)="openFileDialog()">Import</button>
     <input #file id="file" type="file" (change)="import($event)"/>
-    <button md-button (click)="export()">Export</button>
+    <button md-button (click)="export()" [disabled]="tableService.guests.length == 0">Export</button>
     <button md-button (click)="close()">X</button>
   </header>
 

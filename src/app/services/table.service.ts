@@ -62,21 +62,24 @@ export class TableService {
   }
 
   public generateLayout(): void {
-    if (this.guests == null || this.guests.length == 0)
-      return;
-
     this._courses = new Array();
 
-    switch (this._algorithm) {
-      case Algorithm.RANDOM:
-        for (let c: number = 0; c < this._courseCount; c++) {
-          this._courses.push({id: c, tables: this.generateRandom()});
-        }
-        break;
-      case Algorithm.UNIQUE_TABLES:
-        return;
-      case Algorithm.UNIQUE_GUESTS:
-        return;
+    if (this.guests != null && this.guests.length > 0) {
+      switch (this._algorithm) {
+        case Algorithm.RANDOM:
+          for (let c: number = 0; c < this._courseCount; c++) {
+            this._courses.push({id: c, tables: this.generateRandom()});
+          }
+          break;
+        case Algorithm.UNIQUE_TABLES:
+          return;
+        case Algorithm.UNIQUE_GUESTS:
+          return;
+      }
+    } else {
+      for (let c: number = 0; c < this._courseCount; c++) {
+        this._courses.push({id: c, tables: new Array()});
+      }
     }
 
     this._courseSubject.next(this._courses);
@@ -121,6 +124,8 @@ export class TableService {
 
   public removeGuest(id: number): void {
     this._guests.splice(id, 1);
+    if(this._guests.length != 0 && this._guests.length < this._tableCount)
+      this._tableCount = this._guests.length;
     this.generateLayout();
   }
 
@@ -160,6 +165,8 @@ export class TableService {
 
   set tableCount(value: number) {
     this._tableCount = value;
+    if(this._guests.length != 0 && this._tableCount > this._guests.length)
+      this._tableCount = this._guests.length;
     this.generateLayout();
   }
 

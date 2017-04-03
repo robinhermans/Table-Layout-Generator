@@ -49,3 +49,8 @@ md-select {
   pointer-events: none;
 }
 
+.info {
+  font-size: 16px;
+  color: gray;
+  text-align: center;
+}
