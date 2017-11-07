@@ -1,10 +1,10 @@
 <div class="container">
   <header>
     <h1>Guests</h1>
-    <button md-button (click)="openFileDialog()">Import</button>
+    <button mat-button (click)="openFileDialog()">Import</button>
     <input #file id="file" type="file" (change)="import($event)"/>
-    <button md-button (click)="export()" [disabled]="tableService.guests.length == 0">Export</button>
-    <button md-button (click)="close()">X</button>
+    <button mat-button (click)="export()" [disabled]="tableService.guests.length == 0">Export</button>
+    <button mat-button (click)="close()">X</button>
   </header>
 
   <hr>
@@ -22,13 +22,13 @@
     <tr *ngFor="let guest of tableService.guests | reverse">
       <td>{{guest.name}}</td>
       <td class="small">
-        <md-checkbox [(ngModel)]="guest.eatsMeat"></md-checkbox>
+        <mat-checkbox [(ngModel)]="guest.eatsMeat"></mat-checkbox>
       </td>
       <td class="small">
-        <md-checkbox [(ngModel)]="guest.eatsFish"></md-checkbox>
+        <mat-checkbox [(ngModel)]="guest.eatsFish"></mat-checkbox>
       </td>
       <td class="small">
-        <button md-button (click)="removeGuest(guest.id)">Delete</button>
+        <button mat-button (click)="removeGuest(guest.id)">Delete</button>
       </td>
     </tr>
     </tbody>
@@ -38,14 +38,14 @@
 
   <div class="form">
     <div class="name">
-      <md-input-container>
-        <input mdInput placeholder="Guest name" [(ngModel)]="guestModel.name">
-      </md-input-container>
+      <mat-form-field>
+        <input matInput placeholder="Guest name" [(ngModel)]="guestModel.name">
+      </mat-form-field>
     </div>
     <div class="other">
-      <md-checkbox [(ngModel)]="guestModel.eatsMeat">Meat</md-checkbox>
-      <md-checkbox [(ngModel)]="guestModel.eatsFish">Fish</md-checkbox>
-      <button md-button (click)="addGuest()" [disabled]="!guestModel.name">Add Guest</button>
+      <mat-checkbox [(ngModel)]="guestModel.eatsMeat">Meat</mat-checkbox>
+      <mat-checkbox [(ngModel)]="guestModel.eatsFish">Fish</mat-checkbox>
+      <button mat-button (click)="addGuest()" [disabled]="!guestModel.name">Add Guest</button>
     </div>
   </div>
 </div>

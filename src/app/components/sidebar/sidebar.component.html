@@ -1,9 +1,9 @@
 <h3>Course</h3>
-<md-select [(ngModel)]="tableService.currentCourse">
-  <md-option *ngFor="let course of tableService.courses" [value]="course.id">
+<mat-select [(ngModel)]="tableService.currentCourse">
+  <mat-option *ngFor="let course of tableService.courses" [value]="course.id">
     Course {{ course.id + 1}}
-  </md-option>
-</md-select>
+  </mat-option>
+</mat-select>
 <h3>Guests</h3>
 <div *ngIf="tableService.guests.length == 0">
   <h3 class="info">No guests configured</h3>
@@ -21,40 +21,40 @@
     <tr *ngFor="let guest of tableService.guests">
       <td>{{guest.name}}</td>
       <td class="small">
-        <md-checkbox [ngModel]="guest.eatsMeat" disabled></md-checkbox>
+        <mat-checkbox [ngModel]="guest.eatsMeat" disabled></mat-checkbox>
       </td>
       <td class="small">
-        <md-checkbox [ngModel]="guest.eatsFish" disabled></md-checkbox>
+        <mat-checkbox [ngModel]="guest.eatsFish" disabled></mat-checkbox>
       </td>
     </tr>
     </tbody>
   </table>
 </div>
 
-<button md-button (click)="openGuestsDialog()">Manage Guests</button>
+<button mat-button (click)="openGuestsDialog()">Manage Guests</button>
 
 
 <h3>Settings</h3>
 <label>Tables ( {{tableService.tableCount}} )</label><br/>
-<md-slider min="1" max="12" step="1" [(ngModel)]="tableService.tableCount"></md-slider>
+<mat-slider min="1" max="12" step="1" [(ngModel)]="tableService.tableCount"></mat-slider>
 <br/>
 <label>Courses ( {{tableService.courseCount}} )</label><br/>
-<md-slider min="1" max="6" step="1" [(ngModel)]="tableService.courseCount"></md-slider>
+<mat-slider min="1" max="6" step="1" [(ngModel)]="tableService.courseCount"></mat-slider>
 
 <h3>Algorithm</h3>
 <div class="toggle-container">
   <button class="toggle-button" [class.toggle-active]="isAlgorithmActive('UNIQUE_TABLES')"
-          (click)="setActiveAlgorithm('UNIQUE_TABLES')" md-button [disabled]="!allowUniqueTables()">Unique table
+          (click)="setActiveAlgorithm('UNIQUE_TABLES')" mat-button [disabled]="!allowUniqueTables()">Unique table
   </button>
   <button class="toggle-button" [class.toggle-active]="isAlgorithmActive('RANDOM')"
-          (click)="setActiveAlgorithm('RANDOM')" md-button>Random
+          (click)="setActiveAlgorithm('RANDOM')" mat-button>Random
   </button>
   <button class="toggle-button" [class.toggle-active]="isAlgorithmActive('UNIQUE_GUESTS')"
-          (click)="setActiveAlgorithm('UNIQUE_GUESTS')" md-button [disabled]="!allowUniqueGuests()">Unique guests
+          (click)="setActiveAlgorithm('UNIQUE_GUESTS')" mat-button [disabled]="!allowUniqueGuests()">Unique guests
   </button>
 </div>
 
 <h3>Export</h3>
-<button md-button (click)="pdfService.generatePdf()">Generate PDF</button>
+<button mat-button (click)="pdfService.generatePdf()">Generate PDF</button>
 
 

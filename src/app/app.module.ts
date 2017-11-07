@@ -2,9 +2,10 @@ import 'hammerjs';
 import {NgModule} from '@angular/core'
 import {AppComponent} from './app.component';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {BrowserModule} from '@angular/platform-browser';
 import {HttpModule} from '@angular/http';
-import {MaterialModule} from "../../node_modules/@angular/material/module";
+import {MatFormFieldModule, MatInputModule, MatOptionModule, MatSelectModule, MatDialogModule, MatSliderModule, MatButtonModule, MatCheckboxModule} from "@angular/material";
 import {CanvasComponent} from "./components/canvas/canvas.component";
 import {SidebarComponent} from "./components/sidebar/sidebar.component";
 import {TableService} from "./services/table.service";
@@ -25,7 +26,15 @@ import {PdfService} from "./services/pdf.service";
     FormsModule,
     ReactiveFormsModule,
     HttpModule,
-    MaterialModule
+    BrowserAnimationsModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatOptionModule,
+    MatSelectModule,
+    MatDialogModule,
+    MatSliderModule,
+    MatButtonModule,
+    MatCheckboxModule
   ],
   entryComponents: [
     GuestComponent

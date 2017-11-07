@@ -1,5 +1,5 @@
 import {Component, ViewContainerRef, ChangeDetectionStrategy} from '@angular/core';
-import {MdDialog, MdDialogConfig, MdDialogRef} from '@angular/material';
+import {MatDialog, MatDialogConfig, MatDialogRef} from '@angular/material';
 import {TableService} from "../../services/table.service";
 import {GuestComponent} from "../guest/guest.component";
 import {PdfService} from "../../services/pdf.service";
@@ -13,20 +13,20 @@ import {Algorithm} from "../../entities/algorithm.enum";
 })
 export class SidebarComponent {
 
-  private _dialogRef: MdDialogRef<GuestComponent>;
-  private _dialog: MdDialog;
+  private _dialogRef: MatDialogRef<GuestComponent>;
+  private _dialog: MatDialog;
   private _viewContainerRef: ViewContainerRef;
   private _tableService: TableService;
   private _pdfService: PdfService;
 
-  constructor(tableService: TableService, pdfService: PdfService, dialog: MdDialog) {
+  constructor(tableService: TableService, pdfService: PdfService, dialog: MatDialog) {
     this._pdfService = pdfService;
     this._tableService = tableService;
     this._dialog = dialog;
   }
 
   public openGuestsDialog(): void {
-    let config = new MdDialogConfig();
+    let config = new MatDialogConfig();
     config.viewContainerRef = this._viewContainerRef;
 
     this._dialogRef = this._dialog.open(GuestComponent, config);

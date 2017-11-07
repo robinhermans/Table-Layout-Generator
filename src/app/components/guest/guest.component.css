@@ -59,7 +59,7 @@ th {
   flex: 6;
 }
 
-md-input-container{
+mat-form-field{
   width: 95%;
 }
 

@@ -1,5 +1,5 @@
 import {Component, ViewChild, ElementRef} from '@angular/core';
-import {MdDialogRef} from '@angular/material';
+import {MatDialogRef} from '@angular/material';
 import {TableService} from "../../services/table.service";
 import {Guest} from "../../entities/guest.entity";
 
@@ -13,11 +13,11 @@ export class GuestComponent {
   @ViewChild("file")
   private _fileInput: ElementRef;
 
-  private _dialogReference: MdDialogRef<GuestComponent>;
+  private _dialogReference: MatDialogRef<GuestComponent>;
   private _tableService: TableService;
   private _guestModel: Guest;
 
-  constructor(dialogReference: MdDialogRef<GuestComponent>, tableService: TableService) {
+  constructor(dialogReference: MatDialogRef<GuestComponent>, tableService: TableService) {
     this._dialogReference = dialogReference;
     this._tableService = tableService;
     this._guestModel = {id: null, name: null, eatsMeat: true, eatsFish: true} as Guest;

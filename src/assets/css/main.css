@@ -10,7 +10,7 @@ html, body{
   background-color: #34495e;
 }
 
-md-slider {
+mat-slider {
   width: 100%;
 }
 
