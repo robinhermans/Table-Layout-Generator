@@ -1,7 +1,7 @@
-import {Component, ViewChild, ElementRef} from '@angular/core';
-import {MatDialogRef} from '@angular/material';
-import {TableService} from "../../services/table.service";
-import {Guest} from "../../entities/guest.entity";
+import { Component, ViewChild, ElementRef } from '@angular/core';
+import { MatDialogRef } from '@angular/material';
+import { TableService } from "../../services/table.service";
+import { Guest } from "../../entities/guest.entity";
 
 @Component({
   selector: 'guest-component',
@@ -20,17 +20,17 @@ export class GuestComponent {
   constructor(dialogReference: MatDialogRef<GuestComponent>, tableService: TableService) {
     this._dialogReference = dialogReference;
     this._tableService = tableService;
-    this._guestModel = {id: null, name: null, eatsMeat: true, eatsFish: true} as Guest;
+    this._guestModel = new Guest(null, null, true, true);
   }
 
   public addGuest(): void {
-    if(!this._guestModel.name || this._guestModel.name == "")
+    if (!this._guestModel.name || this._guestModel.name == "")
       return;
 
     let id: number = this._tableService.guests.length;
     this._guestModel.id = id;
     this._tableService.addGuest(this._guestModel);
-    this._guestModel = {id: null, name: null, eatsMeat: true, eatsFish: true} as Guest;
+    this._guestModel = new Guest(null, null, true, true);
   }
 
   public removeGuest(id: number): void {
@@ -51,9 +51,14 @@ export class GuestComponent {
     let file = event.target.files[0];
     var reader = new FileReader();
 
-    reader.onload = function(e) {
-      if(!reader.error) {
-        let guests: Array<Guest> = JSON.parse(reader.result) as Array<Guest>;
+    reader.onload = function (e) {
+      if (!reader.error) {
+        let guests: Array<Guest> = new Array();
+        let jsonArray = JSON.parse(reader.result);
+        for (let i: 0; i < jsonArray.length; i++) {
+          let json: Object = jsonArray[i];
+          guests.push(new Guest(json["_id"], json["_name"], json["_eatsMeat"], json["_eatsFish"]));
+        }
         self._tableService.guests = guests;
       }
     }

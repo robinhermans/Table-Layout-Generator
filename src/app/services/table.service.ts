@@ -1,9 +1,13 @@
-import {Injectable} from '@angular/core';
-import {Subject} from 'rxjs/Subject'
-import {Course} from "../entities/course.entity";
-import {Guest} from "../entities/guest.entity";
-import {Table} from "../entities/table.entity";
-import {Algorithm} from "../entities/algorithm.enum";
+import { Injectable } from '@angular/core';
+import { Subject } from 'rxjs/Subject'
+import { Course } from "../entities/course.entity";
+import { Guest } from "../entities/guest.entity";
+import { Table } from "../entities/table.entity";
+import { Algorithm } from "../entities/algorithm.enum";
+import { Graph } from "../entities/graph.entity";
+import { Vertex } from "../entities/vertex.entity";
+import { Edge } from "../entities/edge.entity";
+import { Chair } from "../entities/chair.entity";
 
 @Injectable()
 export class TableService {
@@ -30,31 +34,31 @@ export class TableService {
   }
 
   private loadTestData(): void {
-    this._guests.push({id: 1, name: "One", eatsMeat: true, eatsFish: true});
-    this._guests.push({id: 2, name: "Two", eatsMeat: true, eatsFish: true});
-    this._guests.push({id: 3, name: "Three", eatsMeat: true, eatsFish: true});
-    this._guests.push({id: 4, name: "Four", eatsMeat: false, eatsFish: false});
-    this._guests.push({id: 5, name: "Five", eatsMeat: true, eatsFish: true});
-    this._guests.push({id: 6, name: "Six", eatsMeat: true, eatsFish: false});
-    this._guests.push({id: 7, name: "Seven", eatsMeat: false, eatsFish: true});
-    this._guests.push({id: 8, name: "Eight", eatsMeat: true, eatsFish: true});
-    this._guests.push({id: 9, name: "Nine", eatsMeat: true, eatsFish: false});
-    this._guests.push({id: 10, name: "Ten", eatsMeat: true, eatsFish: true});
-    this._guests.push({id: 11, name: "Eleven", eatsMeat: true, eatsFish: true});
-    this._guests.push({id: 12, name: "Twelve", eatsMeat: false, eatsFish: true});
+    this._guests.push(new Guest(1, "One", true, true));
+    this._guests.push(new Guest(2, "Two", true,  true ));
+    this._guests.push(new Guest(3, "Three", true,  true ));
+    this._guests.push(new Guest(4, "Four", false,  false ));
+    this._guests.push(new Guest(5, "Five", true,  true ));
+    this._guests.push(new Guest(6, "Six", true,  false ));
+    this._guests.push(new Guest(7, "Seven", false,  true ));
+    this._guests.push(new Guest(8, "Eight", true,  true ));
+    this._guests.push(new Guest(9, "Nine", true,  false ));
+    this._guests.push(new Guest(10, "Ten", true,  true ));
+    this._guests.push(new Guest(11, "Eleven", true,  true ));
+    this._guests.push(new Guest(12, "Twelve", false,  true ));
 
-    this._guests.push({id: 13, name: "Thirteen", eatsMeat: true, eatsFish: true});
-    this._guests.push({id: 14, name: "Fourteen", eatsMeat: true, eatsFish: true});
-    this._guests.push({id: 15, name: "Fifteen", eatsMeat: true, eatsFish: true});
-    this._guests.push({id: 16, name: "Sixteen", eatsMeat: false, eatsFish: false});
-    this._guests.push({id: 17, name: "Seventeen", eatsMeat: true, eatsFish: true});
-    this._guests.push({id: 18, name: "Eighteen", eatsMeat: true, eatsFish: false});
-    this._guests.push({id: 19, name: "Nineteen", eatsMeat: false, eatsFish: true});
-    this._guests.push({id: 20, name: "Twenty", eatsMeat: true, eatsFish: true});
-    this._guests.push({id: 21, name: "Twenty One", eatsMeat: true, eatsFish: false});
-    this._guests.push({id: 22, name: "Twenty Two", eatsMeat: true, eatsFish: true});
-    this._guests.push({id: 23, name: "Twenty Three", eatsMeat: true, eatsFish: true});
-    this._guests.push({id: 24, name: "Twenty Four", eatsMeat: false, eatsFish: true});
+    this._guests.push(new Guest(13, "Thirteen",  true,  true ));
+    this._guests.push(new Guest(14, "Fourteen",  true,  true ));
+    this._guests.push(new Guest(15, "Fifteen",  true,  true ));
+    this._guests.push(new Guest(16, "Sixteen",  false,  false ));
+    this._guests.push(new Guest(17, "Seventeen",  true,  true ));
+    this._guests.push(new Guest(18, "Eighteen",  true,  false ));
+    this._guests.push(new Guest(19, "Nineteen",  false,  true ));
+    this._guests.push(new Guest(20, "Twenty",  true,  true ));
+    this._guests.push(new Guest(21, "Twenty One",  true,  false ));
+    this._guests.push(new Guest(22, "Twenty Two",  true,  true ));
+    this._guests.push(new Guest(23, "Twenty Three",  true,  true ));
+    this._guests.push(new Guest(24, "Twenty Four",  false,  true ));
   }
 
   public redrawLayout(): void {
@@ -68,7 +72,7 @@ export class TableService {
       switch (this._algorithm) {
         case Algorithm.RANDOM:
           for (let c: number = 0; c < this._courseCount; c++) {
-            this._courses.push({id: c, tables: this.generateRandom()});
+            this._courses.push(new Course(c, this.generateRandom() ));
           }
           break;
         case Algorithm.UNIQUE_TABLES:
@@ -78,7 +82,7 @@ export class TableService {
       }
     } else {
       for (let c: number = 0; c < this._courseCount; c++) {
-        this._courses.push({id: c, tables: new Array()});
+        this._courses.push(new Course(c, new Array() ));
       }
     }
 
@@ -100,10 +104,10 @@ export class TableService {
       for (let t = 0; t < this._tableCount; t++) {
         let table: Table = tables[t];
         if (!table) {
-          table = {id: t + 1, chairs: new Array()} as Table;
+          table = new Table(t + 1, new Array());
         }
 
-        table.chairs.push({id: currentCount, guest: shuffledGuests[currentCount]});
+        table.chairs.push(new Chair(currentCount, shuffledGuests[currentCount] ));
 
         tables[t] = table;
 
@@ -117,6 +121,19 @@ export class TableService {
     return tables;
   }
 
+  private generateGuestGraph(): Graph {
+    let graph: Graph = new Graph(1, new Array());
+
+    let vertices: Array<Vertex> = new Array();
+    for (let i = 0; this._guests.length; i++) {
+      let guest = this._guests[i];
+      let vertex: Vertex = new Vertex(vertices.length, guest.name, guest);
+      vertices.push()
+    }
+
+    return graph;
+  }
+
   public addGuest(guest: Guest): void {
     this._guests.push(guest);
     this.generateLayout();
@@ -124,7 +141,7 @@ export class TableService {
 
   public removeGuest(id: number): void {
     this._guests.splice(id, 1);
-    if(this._guests.length != 0 && this._guests.length < this._tableCount)
+    if (this._guests.length != 0 && this._guests.length < this._tableCount)
       this._tableCount = this._guests.length;
     this.generateLayout();
   }
@@ -165,7 +182,7 @@ export class TableService {
 
   set tableCount(value: number) {
     this._tableCount = value;
-    if(this._guests.length != 0 && this._tableCount > this._guests.length)
+    if (this._guests.length != 0 && this._tableCount > this._guests.length)
       this._tableCount = this._guests.length;
     this.generateLayout();
   }
