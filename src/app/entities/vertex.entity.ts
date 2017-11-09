@@ -44,4 +44,14 @@ export class Vertex {
   public set edges(edges: Array<Edge>) {
     this._edges = edges;
   }
+
+  public isLinkedToVertex(Vertex: Vertex): boolean {
+    for (let e = 0; e < this._edges.length; e++) {
+      let edge: Edge = this._edges[e];
+      if (Vertex === edge.value) {
+        return true;
+      }
+    }
+    return false;
+  }
 }

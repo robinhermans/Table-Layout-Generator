@@ -35,30 +35,30 @@ export class TableService {
 
   private loadTestData(): void {
     this._guests.push(new Guest(1, "One", true, true));
-    this._guests.push(new Guest(2, "Two", true,  true ));
-    this._guests.push(new Guest(3, "Three", true,  true ));
-    this._guests.push(new Guest(4, "Four", false,  false ));
-    this._guests.push(new Guest(5, "Five", true,  true ));
-    this._guests.push(new Guest(6, "Six", true,  false ));
-    this._guests.push(new Guest(7, "Seven", false,  true ));
-    this._guests.push(new Guest(8, "Eight", true,  true ));
-    this._guests.push(new Guest(9, "Nine", true,  false ));
-    this._guests.push(new Guest(10, "Ten", true,  true ));
-    this._guests.push(new Guest(11, "Eleven", true,  true ));
-    this._guests.push(new Guest(12, "Twelve", false,  true ));
+    this._guests.push(new Guest(2, "Two", true, true));
+    this._guests.push(new Guest(3, "Three", true, true));
+    this._guests.push(new Guest(4, "Four", false, false));
+    this._guests.push(new Guest(5, "Five", true, true));
+    this._guests.push(new Guest(6, "Six", true, false));
+    this._guests.push(new Guest(7, "Seven", false, true));
+    this._guests.push(new Guest(8, "Eight", true, true));
+    this._guests.push(new Guest(9, "Nine", true, false));
+    this._guests.push(new Guest(10, "Ten", true, true));
+    this._guests.push(new Guest(11, "Eleven", true, true));
+    this._guests.push(new Guest(12, "Twelve", false, true));
 
-    this._guests.push(new Guest(13, "Thirteen",  true,  true ));
-    this._guests.push(new Guest(14, "Fourteen",  true,  true ));
-    this._guests.push(new Guest(15, "Fifteen",  true,  true ));
-    this._guests.push(new Guest(16, "Sixteen",  false,  false ));
-    this._guests.push(new Guest(17, "Seventeen",  true,  true ));
-    this._guests.push(new Guest(18, "Eighteen",  true,  false ));
-    this._guests.push(new Guest(19, "Nineteen",  false,  true ));
-    this._guests.push(new Guest(20, "Twenty",  true,  true ));
-    this._guests.push(new Guest(21, "Twenty One",  true,  false ));
-    this._guests.push(new Guest(22, "Twenty Two",  true,  true ));
-    this._guests.push(new Guest(23, "Twenty Three",  true,  true ));
-    this._guests.push(new Guest(24, "Twenty Four",  false,  true ));
+    this._guests.push(new Guest(13, "Thirteen", true, true));
+    this._guests.push(new Guest(14, "Fourteen", true, true));
+    this._guests.push(new Guest(15, "Fifteen", true, true));
+    this._guests.push(new Guest(16, "Sixteen", false, false));
+    this._guests.push(new Guest(17, "Seventeen", true, true));
+    this._guests.push(new Guest(18, "Eighteen", true, false));
+    this._guests.push(new Guest(19, "Nineteen", false, true));
+    this._guests.push(new Guest(20, "Twenty", true, true));
+    this._guests.push(new Guest(21, "Twenty One", true, false));
+    this._guests.push(new Guest(22, "Twenty Two", true, true));
+    this._guests.push(new Guest(23, "Twenty Three", true, true));
+    this._guests.push(new Guest(24, "Twenty Four", false, true));
   }
 
   public redrawLayout(): void {
@@ -72,17 +72,18 @@ export class TableService {
       switch (this._algorithm) {
         case Algorithm.RANDOM:
           for (let c: number = 0; c < this._courseCount; c++) {
-            this._courses.push(new Course(c, this.generateRandom() ));
+            this._courses.push(new Course(c + 1, this.generateRandom()));
           }
           break;
         case Algorithm.UNIQUE_TABLES:
           return;
         case Algorithm.UNIQUE_GUESTS:
-          return;
+          this._courses = this.generateUniqueGuests();
+          break;
       }
     } else {
       for (let c: number = 0; c < this._courseCount; c++) {
-        this._courses.push(new Course(c, new Array() ));
+        this._courses.push(new Course(c, new Array()));
       }
     }
 
@@ -107,7 +108,7 @@ export class TableService {
           table = new Table(t + 1, new Array());
         }
 
-        table.chairs.push(new Chair(currentCount, shuffledGuests[currentCount] ));
+        table.chairs.push(new Chair(currentCount, shuffledGuests[currentCount]));
 
         tables[t] = table;
 
@@ -121,17 +122,44 @@ export class TableService {
     return tables;
   }
 
-  private generateGuestGraph(): Graph {
+  private generateUniqueGuests(): Array<Course> {
     let graph: Graph = new Graph(1, new Array());
 
     let vertices: Array<Vertex> = new Array();
-    for (let i = 0; this._guests.length; i++) {
-      let guest = this._guests[i];
-      let vertex: Vertex = new Vertex(vertices.length, guest.name, guest);
-      vertices.push()
+    for (let g = 0; g < this._guests.length; g++) {
+      let guest: Guest = this._guests[g];
+      vertices.push(new Vertex(g + 1, guest.name, guest));
     }
 
-    return graph;
+    for (let ov = 0; graph.vertices.length; ov++) {
+      let outerVertex: Vertex = graph.vertices[ov];
+      for (let iv = 0; graph.vertices.length; iv++) {
+        let innerVertex: Vertex = graph.vertices[iv];
+        if (innerVertex !== outerVertex) {
+          if (outerVertex.isLinkedToVertex(innerVertex)) {
+            let name: string = outerVertex.name + " - " + innerVertex.name;
+            outerVertex.edges.push(new Edge((ov + iv) + 1, name, innerVertex, false));
+          }
+        }
+      }
+    }
+
+    let courses: Array<Course> = new Array();
+    for (let c = 0; c < this._courseCount; c++) {
+      let tables: Array<Table> = new Array();
+      for (let t = 0; t < this._tableCount; t++) {
+        let table: Table = tables[t];
+        if (!table) {
+          table = new Table(t + 1, new Array());
+        }
+
+        // table.chairs.push(new Chair(currentCount, shuffledGuests[currentCount]));
+        tables[t] = table;
+      }
+      courses.push(new Course(c + 1, tables));
+    }
+
+    return courses;
   }
 
   public addGuest(guest: Guest): void {

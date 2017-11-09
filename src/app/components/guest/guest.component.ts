@@ -55,7 +55,7 @@ export class GuestComponent {
       if (!reader.error) {
         let guests: Array<Guest> = new Array();
         let jsonArray = JSON.parse(reader.result);
-        for (let i: 0; i < jsonArray.length; i++) {
+        for (let i = 0; i < jsonArray.length; i++) {
           let json: Object = jsonArray[i];
           guests.push(new Guest(json["_id"], json["_name"], json["_eatsMeat"], json["_eatsFish"]));
         }
@@ -63,7 +63,9 @@ export class GuestComponent {
       }
     }
 
-    reader.readAsText(file);
+    if (file != null) {
+      reader.readAsText(file);
+    }
   }
 
   public export(): void {

@@ -1,7 +1,7 @@
 <h3>Course</h3>
 <mat-select [(ngModel)]="tableService.currentCourse">
-  <mat-option *ngFor="let course of tableService.courses" [value]="course.id">
-    Course {{ course.id + 1}}
+  <mat-option *ngFor="let course of tableService.courses" [value]="course.id - 1">
+    Course {{ course.id }}
   </mat-option>
 </mat-select>
 <h3>Guests</h3>

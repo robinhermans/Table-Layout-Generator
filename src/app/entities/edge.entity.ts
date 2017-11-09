@@ -4,15 +4,13 @@ import { Vertex } from "./vertex.entity";
 export class Edge {
 	private _id: number;
 	private _name: string;
-	private _left: Vertex;
-	private _right: Vertex;
+	private _value: Vertex;
 	private _visited: boolean;
 
-	constructor(id: number, name: string, left: Vertex, right: Vertex, visited: boolean) {
+	constructor(id: number, name: string, value: Vertex, visited: boolean) {
 		this._id = id;
 		this._name = name;
-		this._left = left;
-		this._right = right;
+		this._value = value
 		this._visited = visited;
 	}
 
@@ -32,20 +30,12 @@ export class Edge {
 		this._name = name;
 	}
 
-	public get left(): Vertex {
-		return this._left;
+	public get value(): Vertex {
+		return this._value;
 	}
 
-	public set left(left: Vertex) {
-		this._left = left;
-	}
-
-	public get right(): Vertex {
-		return this._right;
-	}
-
-	public set right(right: Vertex) {
-		this._right = right;
+	public set value(value: Vertex) {
+		this._value = value;
 	}
 
 	public get visited(): boolean {
