@@ -1,5 +1,6 @@
 import { Table } from "./table.entity";
 import { Vertex } from "./vertex.entity";
+import { Guest } from "./guest.entity";
 
 export class Edge {
 	private _id: number;
@@ -46,4 +47,13 @@ export class Edge {
 		this._visited = visited;
 	}
 
+	public visit(guest: Guest) {
+		this._visited = true;
+		for (let e = 0; e < this._value.edges.length; e++) {
+			let currentEdge: Edge = this._value.edges[e];
+			if (currentEdge.visited === false && currentEdge.value.value == guest) {
+				currentEdge.visit(this._value.value);
+			}
+		}
+	}
 }

@@ -1,4 +1,5 @@
 import { Vertex } from "./vertex.entity"
+import { Guest } from "./guest.entity";
 
 export class Graph {
   private _id: number;
@@ -23,5 +24,13 @@ export class Graph {
 
   public set vertices(vertices: Array<Vertex>) {
     this._vertices = vertices;
+  }
+
+  public getVertexByValue(guest: Guest): Vertex {
+    for (let v = 0; v < this._vertices.length; v++) {
+      if (this._vertices[v].value = guest) {
+        return this._vertices[v];
+      }
+    }
   }
 }

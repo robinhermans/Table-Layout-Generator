@@ -131,12 +131,14 @@ export class TableService {
       vertices.push(new Vertex(g + 1, guest.name, guest));
     }
 
-    for (let ov = 0; graph.vertices.length; ov++) {
+    graph.vertices = vertices;
+
+    for (let ov = 0; ov < graph.vertices.length; ov++) {
       let outerVertex: Vertex = graph.vertices[ov];
-      for (let iv = 0; graph.vertices.length; iv++) {
+      for (let iv = 0; iv < graph.vertices.length; iv++) {
         let innerVertex: Vertex = graph.vertices[iv];
         if (innerVertex !== outerVertex) {
-          if (outerVertex.isLinkedToVertex(innerVertex)) {
+          if (!outerVertex.isLinkedToVertex(innerVertex)) {
             let name: string = outerVertex.name + " - " + innerVertex.name;
             outerVertex.edges.push(new Edge((ov + iv) + 1, name, innerVertex, false));
           }
@@ -146,15 +148,48 @@ export class TableService {
 
     let courses: Array<Course> = new Array();
     for (let c = 0; c < this._courseCount; c++) {
-      let tables: Array<Table> = new Array();
-      for (let t = 0; t < this._tableCount; t++) {
-        let table: Table = tables[t];
-        if (!table) {
-          table = new Table(t + 1, new Array());
-        }
 
-        // table.chairs.push(new Chair(currentCount, shuffledGuests[currentCount]));
-        tables[t] = table;
+      let shuffledVertices: Array<Vertex> = Array.from(graph.vertices);
+      for (let i = shuffledVertices.length; i; i--) {
+        let j = Math.floor(Math.random() * i);
+        [shuffledVertices[i - 1], shuffledVertices[j]] = [shuffledVertices[j], shuffledVertices[i - 1]];
+      }
+
+      let visitedVertices: Array<Vertex> = new Array();
+
+      let currentCount: number = 0;
+      let tables: Array<Table> = new Array();
+
+      while (currentCount < shuffledVertices.length) {
+        for (let t = 0; t < this._tableCount; t++) {
+          let table: Table = tables[t];
+          if (!table) {
+            table = new Table(t + 1, new Array());
+          }
+
+          let availableVertices: Array<Vertex> = shuffledVertices.filter(item => visitedVertices.indexOf(item) < 0);
+
+          let vertex: Vertex;
+          if (table.chairs.length === 0) {
+            vertex = availableVertices[0];
+          } else {
+            console.log(availableVertices);
+            vertex = graph.getVertexByValue(table.chairs[table.chairs.length - 1].guest);
+            vertex = vertex.getUnvisitedEdge(availableVertices).value;
+          }
+
+          visitedVertices.push(vertex);
+          table.chairs.push(new Chair(currentCount, vertex.value));
+          tables[t] = table;
+
+          currentCount++;
+          console.log("Visited Verti: " + availableVertices.length);
+          console.log("Current count: " + currentCount);
+          if (currentCount == shuffledVertices.length) {
+            console.log("BREAK")
+            break;
+          }
+        }
       }
       courses.push(new Course(c + 1, tables));
     }

@@ -11,6 +11,7 @@ export class Vertex {
     this._id = id;
     this._name = name;
     this._value = value;
+    this._edges = new Array();
   }
 
   public get id(): number {
@@ -45,13 +46,29 @@ export class Vertex {
     this._edges = edges;
   }
 
-  public isLinkedToVertex(Vertex: Vertex): boolean {
+  public isLinkedToVertex(vertex: Vertex): boolean {
     for (let e = 0; e < this._edges.length; e++) {
       let edge: Edge = this._edges[e];
-      if (Vertex === edge.value) {
+      if (vertex === edge.value) {
         return true;
       }
     }
     return false;
+  }
+
+  public getUnvisitedEdge(availableVertices: Array<Vertex>): Edge {
+    let unvisitedEdges: Array<Edge> = new Array();
+    for (let ue = 0; ue < this._edges.length; ue++) {
+      let edge: Edge = this._edges[ue];
+      if (edge.visited === false && availableVertices.indexOf(edge.value) >= 0) {
+        unvisitedEdges.push(edge);
+      }
+    }
+    console.log(unvisitedEdges);
+    let index: number = Math.floor(Math.random() * (unvisitedEdges.length));
+    index = (index - 1) < 1 ? 1 : index;
+    let edge: Edge = unvisitedEdges[index - 1];
+    edge.visit(this._value);
+    return edge;
   }
 }
