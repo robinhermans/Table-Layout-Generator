@@ -28,7 +28,7 @@ export class Graph {
 
   public getVertexByValue(guest: Guest): Vertex {
     for (let v = 0; v < this._vertices.length; v++) {
-      if (this._vertices[v].value = guest) {
+      if (this._vertices[v].value.id == guest.id) {
         return this._vertices[v];
       }
     }

@@ -49,7 +49,7 @@ export class Vertex {
   public isLinkedToVertex(vertex: Vertex): boolean {
     for (let e = 0; e < this._edges.length; e++) {
       let edge: Edge = this._edges[e];
-      if (vertex === edge.value) {
+      if (vertex.id == edge.value.id) {
         return true;
       }
     }
@@ -60,11 +60,10 @@ export class Vertex {
     let unvisitedEdges: Array<Edge> = new Array();
     for (let ue = 0; ue < this._edges.length; ue++) {
       let edge: Edge = this._edges[ue];
-      if (edge.visited === false && availableVertices.indexOf(edge.value) >= 0) {
+      if (!edge.visited && availableVertices.filter(item => item.id == edge.value.id).length == 1) {
         unvisitedEdges.push(edge);
       }
     }
-    console.log(unvisitedEdges);
     let index: number = Math.floor(Math.random() * (unvisitedEdges.length));
     index = (index - 1) < 1 ? 1 : index;
     let edge: Edge = unvisitedEdges[index - 1];

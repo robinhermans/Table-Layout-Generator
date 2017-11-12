@@ -167,13 +167,12 @@ export class TableService {
             table = new Table(t + 1, new Array());
           }
 
-          let availableVertices: Array<Vertex> = shuffledVertices.filter(item => visitedVertices.indexOf(item) < 0);
+          let availableVertices: Array<Vertex> = shuffledVertices.filter(item => visitedVertices.map(vertex => vertex.id).indexOf(item.id) < 0)
 
           let vertex: Vertex;
           if (table.chairs.length === 0) {
             vertex = availableVertices[0];
           } else {
-            console.log(availableVertices);
             vertex = graph.getVertexByValue(table.chairs[table.chairs.length - 1].guest);
             vertex = vertex.getUnvisitedEdge(availableVertices).value;
           }
@@ -183,10 +182,7 @@ export class TableService {
           tables[t] = table;
 
           currentCount++;
-          console.log("Visited Verti: " + availableVertices.length);
-          console.log("Current count: " + currentCount);
           if (currentCount == shuffledVertices.length) {
-            console.log("BREAK")
             break;
           }
         }
