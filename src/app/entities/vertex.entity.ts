@@ -67,7 +67,9 @@ export class Vertex {
     let index: number = Math.floor(Math.random() * (unvisitedEdges.length));
     index = (index - 1) < 1 ? 1 : index;
     let edge: Edge = unvisitedEdges[index - 1];
-    edge.visit(this._value);
+    if (edge) {
+      edge.visit(this._value);
+    }
     return edge;
   }
 }

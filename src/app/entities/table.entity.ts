@@ -1,12 +1,15 @@
 import {Chair} from "./chair.entity";
+import {Vertex} from "./vertex.entity";
 
 export class Table {
   private _id: number;
   private _chairs: Array<Chair>;
+  private _vertices: Array<Vertex>;
 
   constructor(id: number, chairs: Array<Chair>){
     this._id = id;
     this._chairs = chairs;
+    this._vertices = new Array<Vertex>();
   }
 
   public get id() : number{
@@ -23,5 +26,13 @@ export class Table {
 
   public set chairs(chairs: Array<Chair>){
     this._chairs = chairs;
+  }
+
+  public get vertices() : Array<Vertex>{
+    return this._vertices
+  }
+
+  public set vertices(vertices: Array<Vertex>){
+    this._vertices = vertices;
   }
 }
