@@ -38,9 +38,7 @@
 
   <div class="form">
     <div class="name">
-      <mat-form-field>
-        <input matInput placeholder="Guest name" [(ngModel)]="guestModel.name">
-      </mat-form-field>
+        <input class="name-input" matInput placeholder="Guest name" [(ngModel)]="guestModel.name" (keyup.enter)="addGuest()">
     </div>
     <div class="other">
       <mat-checkbox [(ngModel)]="guestModel.eatsMeat">Meat</mat-checkbox>
