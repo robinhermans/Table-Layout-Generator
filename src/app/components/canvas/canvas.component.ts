@@ -23,7 +23,8 @@ export class CanvasComponent {
   private _plateImage: any;
   private _fishImage: any;
   private _meatImage: any;
-  private _fishMeatImage: any;
+  private _vegiImage: any;
+  private _allImage: any;
 
   constructor(tableService: TableService) {
     this._tableService = tableService;
@@ -57,11 +58,15 @@ export class CanvasComponent {
           self._fishImage.onload = function () {
             self._meatImage = new Image();
             self._meatImage.onload = function () {
-              self._fishMeatImage = new Image();
-              self._fishMeatImage.onload = function () {
-                self.draw();
+              self._allImage = new Image();
+              self._allImage.onload = function () {
+                self._vegiImage = new Image();
+                self._vegiImage.onload = function () {
+                  self.draw();
+                }
+                self._vegiImage.src = "assets/images/vegi.png"
               }
-              self._fishMeatImage.src = "assets/images/fishmeat.png";
+              self._allImage.src = "assets/images/all.png";
             }
             self._meatImage.src = "assets/images/meat.png";
           }
@@ -76,6 +81,24 @@ export class CanvasComponent {
 
   private draw() {
     this._context.clearRect(0, 0, this._width, this._height);
+
+    this._context.fillStyle = "black";
+    this._context.font = "14px Roboto";
+    this._context.textAlign = "left";
+    this._context.fillText("Legend", 5, 15);
+
+    this._context.font = "12px Roboto";
+    this._context.fillText("Vegetarian", 20, 34);
+    this._context.drawImage(this._vegiImage, 0, 20);
+
+    this._context.fillText("Fish", 20, 49);
+    this._context.drawImage(this._fishImage, 0, 35);
+
+    this._context.fillText("Meat", 20, 64);
+    this._context.drawImage(this._meatImage, 0, 50);
+
+    this._context.fillText("All", 20, 79);
+    this._context.drawImage(this._allImage, 0, 65);
 
     let currentCourse: Course = this._tableService.courses[this._tableService.currentCourse];
     let tables: Array<Table> = currentCourse.tables;
@@ -158,13 +181,16 @@ export class CanvasComponent {
       this._context.drawImage(this._plateImage, 45, -9);
 
       if(chair.guest.eatsFish && chair.guest.eatsMeat){
-        this._context.drawImage(this._fishMeatImage, 50, -8);
+        this._context.drawImage(this._allImage, 45, -9);
       }
       if(chair.guest.eatsFish && !chair.guest.eatsMeat){
-        this._context.drawImage(this._fishImage, 50, -8);
+        this._context.drawImage(this._fishImage, 45, -9);
       }
       if(!chair.guest.eatsFish && chair.guest.eatsMeat){
-        this._context.drawImage(this._meatImage, 50, -8);
+        this._context.drawImage(this._meatImage, 45, -9);
+      }
+      if(!chair.guest.eatsFish && !chair.guest.eatsMeat){
+        this._context.drawImage(this._vegiImage, 45, -9);
       }
 
       let name: string = chair.guest.name;

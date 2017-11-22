@@ -1,7 +1,7 @@
 <h3>Course</h3>
 <mat-select [(ngModel)]="tableService.currentCourse">
-  <mat-option *ngFor="let course of tableService.courses" [value]="course.id">
-    Course {{ course.id + 1}}
+  <mat-option *ngFor="let course of tableService.courses" [value]="course.id - 1">
+    Course {{ course.id }}
   </mat-option>
 </mat-select>
 <h3>Guests</h3>
@@ -44,13 +44,13 @@
 <h3>Algorithm</h3>
 <div class="toggle-container">
   <button class="toggle-button" [class.toggle-active]="isAlgorithmActive('UNIQUE_TABLES')"
-          (click)="setActiveAlgorithm('UNIQUE_TABLES')" mat-button [disabled]="!allowUniqueTables()">Unique table
+          (click)="setActiveAlgorithm('UNIQUE_TABLES')" mat-button [disabled]="!tableService.allowUniqueTables()">Unique table
   </button>
   <button class="toggle-button" [class.toggle-active]="isAlgorithmActive('RANDOM')"
           (click)="setActiveAlgorithm('RANDOM')" mat-button>Random
   </button>
   <button class="toggle-button" [class.toggle-active]="isAlgorithmActive('UNIQUE_GUESTS')"
-          (click)="setActiveAlgorithm('UNIQUE_GUESTS')" mat-button [disabled]="!allowUniqueGuests()">Unique guests
+          (click)="setActiveAlgorithm('UNIQUE_GUESTS')" mat-button [disabled]="!tableService.allowUniqueGuests()">Unique guests
   </button>
 </div>
 

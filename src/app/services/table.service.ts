@@ -1,9 +1,13 @@
-import {Injectable} from '@angular/core';
-import {Subject} from 'rxjs/Subject'
-import {Course} from "../entities/course.entity";
-import {Guest} from "../entities/guest.entity";
-import {Table} from "../entities/table.entity";
-import {Algorithm} from "../entities/algorithm.enum";
+import { Injectable } from '@angular/core';
+import { Subject } from 'rxjs/Subject'
+import { Course } from "../entities/course.entity";
+import { Guest } from "../entities/guest.entity";
+import { Table } from "../entities/table.entity";
+import { Algorithm } from "../entities/algorithm.enum";
+import { Graph } from "../entities/graph.entity";
+import { Vertex } from "../entities/vertex.entity";
+import { Edge } from "../entities/edge.entity";
+import { Chair } from "../entities/chair.entity";
 
 @Injectable()
 export class TableService {
@@ -20,7 +24,7 @@ export class TableService {
     this._guests = new Array();
     this._courses = new Array();
     this._currentCourse = 0;
-    this._tableCount = 6;
+    this._tableCount = 3;
     this._courseCount = 3;
     this._algorithm = Algorithm.RANDOM;
     this._courseSubject = new Subject();
@@ -30,31 +34,31 @@ export class TableService {
   }
 
   private loadTestData(): void {
-    this._guests.push({id: 1, name: "One", eatsMeat: true, eatsFish: true});
-    this._guests.push({id: 2, name: "Two", eatsMeat: true, eatsFish: true});
-    this._guests.push({id: 3, name: "Three", eatsMeat: true, eatsFish: true});
-    this._guests.push({id: 4, name: "Four", eatsMeat: false, eatsFish: false});
-    this._guests.push({id: 5, name: "Five", eatsMeat: true, eatsFish: true});
-    this._guests.push({id: 6, name: "Six", eatsMeat: true, eatsFish: false});
-    this._guests.push({id: 7, name: "Seven", eatsMeat: false, eatsFish: true});
-    this._guests.push({id: 8, name: "Eight", eatsMeat: true, eatsFish: true});
-    this._guests.push({id: 9, name: "Nine", eatsMeat: true, eatsFish: false});
-    this._guests.push({id: 10, name: "Ten", eatsMeat: true, eatsFish: true});
-    this._guests.push({id: 11, name: "Eleven", eatsMeat: true, eatsFish: true});
-    this._guests.push({id: 12, name: "Twelve", eatsMeat: false, eatsFish: true});
+    this._guests.push(new Guest(0, "One", true, true));
+    this._guests.push(new Guest(1, "Two", true, true));
+    this._guests.push(new Guest(2, "Three", true, true));
+    this._guests.push(new Guest(3, "Four", false, false));
+    this._guests.push(new Guest(4, "Five", true, true));
+    this._guests.push(new Guest(5, "Six", true, false));
+    this._guests.push(new Guest(7, "Seven", false, true));
+    this._guests.push(new Guest(8, "Eight", true, true));
+    this._guests.push(new Guest(9, "Nine", true, false));
+    this._guests.push(new Guest(10, "Ten", true, true));
+    this._guests.push(new Guest(11, "Eleven", true, true));
+    this._guests.push(new Guest(12, "Twelve", false, true));
 
-    this._guests.push({id: 13, name: "Thirteen", eatsMeat: true, eatsFish: true});
-    this._guests.push({id: 14, name: "Fourteen", eatsMeat: true, eatsFish: true});
-    this._guests.push({id: 15, name: "Fifteen", eatsMeat: true, eatsFish: true});
-    this._guests.push({id: 16, name: "Sixteen", eatsMeat: false, eatsFish: false});
-    this._guests.push({id: 17, name: "Seventeen", eatsMeat: true, eatsFish: true});
-    this._guests.push({id: 18, name: "Eighteen", eatsMeat: true, eatsFish: false});
-    this._guests.push({id: 19, name: "Nineteen", eatsMeat: false, eatsFish: true});
-    this._guests.push({id: 20, name: "Twenty", eatsMeat: true, eatsFish: true});
-    this._guests.push({id: 21, name: "Twenty One", eatsMeat: true, eatsFish: false});
-    this._guests.push({id: 22, name: "Twenty Two", eatsMeat: true, eatsFish: true});
-    this._guests.push({id: 23, name: "Twenty Three", eatsMeat: true, eatsFish: true});
-    this._guests.push({id: 24, name: "Twenty Four", eatsMeat: false, eatsFish: true});
+    this._guests.push(new Guest(13, "Thirteen", true, true));
+    this._guests.push(new Guest(14, "Fourteen", true, true));
+    this._guests.push(new Guest(15, "Fifteen", true, true));
+    this._guests.push(new Guest(16, "Sixteen", false, false));
+    this._guests.push(new Guest(17, "Seventeen", true, true));
+    this._guests.push(new Guest(18, "Eighteen", true, false));
+    this._guests.push(new Guest(19, "Nineteen", false, true));
+    this._guests.push(new Guest(20, "Twenty", true, true));
+    this._guests.push(new Guest(21, "Twenty One", true, false));
+    this._guests.push(new Guest(22, "Twenty Two", true, true));
+    this._guests.push(new Guest(23, "Twenty Three", true, true));
+    this._guests.push(new Guest(24, "Twenty Four", false, true));
   }
 
   public redrawLayout(): void {
@@ -62,23 +66,27 @@ export class TableService {
   }
 
   public generateLayout(): void {
-    this._courses = new Array();
+    this.allowUniqueGuests();
+    this.allowUniqueTables();
 
+    this._courses = new Array();
     if (this.guests != null && this.guests.length > 0) {
       switch (this._algorithm) {
         case Algorithm.RANDOM:
           for (let c: number = 0; c < this._courseCount; c++) {
-            this._courses.push({id: c, tables: this.generateRandom()});
+            this._courses.push(new Course(c + 1, this.generateRandom()));
           }
           break;
         case Algorithm.UNIQUE_TABLES:
-          return;
+          this._courses = this.generateUniqueTables();
+          break;
         case Algorithm.UNIQUE_GUESTS:
-          return;
+          this._courses = this.generateUniqueGuests();
+          break;
       }
     } else {
       for (let c: number = 0; c < this._courseCount; c++) {
-        this._courses.push({id: c, tables: new Array()});
+        this._courses.push(new Course(c, new Array()));
       }
     }
 
@@ -100,10 +108,10 @@ export class TableService {
       for (let t = 0; t < this._tableCount; t++) {
         let table: Table = tables[t];
         if (!table) {
-          table = {id: t + 1, chairs: new Array()} as Table;
+          table = new Table(t + 1, new Array());
         }
 
-        table.chairs.push({id: currentCount, guest: shuffledGuests[currentCount]});
+        table.chairs.push(new Chair(currentCount, shuffledGuests[currentCount]));
 
         tables[t] = table;
 
@@ -117,6 +125,174 @@ export class TableService {
     return tables;
   }
 
+  private generateUniqueGuests(): Array<Course> {
+    let graph: Graph = new Graph(0, new Array());
+
+    let vertices: Array<Vertex> = new Array();
+    for (let g = 0; g < this._guests.length; g++) {
+      let guest: Guest = this._guests[g];
+      vertices.push(new Vertex(g, guest.name, guest));
+    }
+
+    graph.vertices = vertices;
+
+    for (let ov = 0; ov < graph.vertices.length; ov++) {
+      let outerVertex: Vertex = graph.vertices[ov];
+      for (let iv = 0; iv < graph.vertices.length; iv++) {
+        let innerVertex: Vertex = graph.vertices[iv];
+        if (innerVertex !== outerVertex) {
+          if (!outerVertex.isLinkedToVertex(innerVertex)) {
+            let name: string = outerVertex.name + " - " + innerVertex.name;
+            outerVertex.edges.push(new Edge((ov + iv), name, innerVertex, false));
+          }
+        }
+      }
+    }
+
+    let courses: Array<Course> = new Array();
+    for (let c = 0; c < this._courseCount; c++) {
+
+      let shuffledVertices: Array<Vertex> = Array.from(graph.vertices);
+      for (let i = shuffledVertices.length; i; i--) {
+        let j = Math.floor(Math.random() * i);
+        [shuffledVertices[i - 1], shuffledVertices[j]] = [shuffledVertices[j], shuffledVertices[i - 1]];
+      }
+
+      let visitedVertices: Array<Vertex> = new Array();
+      let currentCount: number = 0;
+      let tables: Array<Table> = new Array();
+
+      while (currentCount < shuffledVertices.length) {
+        for (let t = 0; t < this._tableCount; t++) {
+          let table: Table = tables[t];
+          if (!table) {
+            table = new Table(t, new Array());
+          }
+
+          let guests: Array<Number> = table.chairs.map(chair => chair.guest).map(guest => guest.id);
+          let tableGuests: Array<Vertex> = shuffledVertices.filter(suffledVertex => guests.indexOf(suffledVertex.value.id) >= 0);
+          let availableVertices: Array<Vertex> = shuffledVertices.filter(item => visitedVertices.map(vertex => vertex.id).indexOf(item.id) < 0);
+
+          let vertex: Vertex;
+          if (table.chairs.length === 0) {
+            vertex = availableVertices[0];
+          } else {
+            let suitableVertices: Array<Vertex> = new Array();
+            tableGuests.forEach(tableGuest => {
+              tableGuest.edges.filter(edge => !edge.visited).map(edge => edge.value).forEach(edgeVertex => {
+                suitableVertices.push(edgeVertex);
+              });
+            });
+            suitableVertices = suitableVertices.filter((x, i, a) => a.indexOf(x) == i).filter(suitableVertex => availableVertices.indexOf(suitableVertex) >= 0);
+            let index: number = Math.floor(Math.random() * (suitableVertices.length));
+            index = (index - 1) < 1 ? 1 : index;
+            vertex = suitableVertices[index - 1];
+          }
+
+          if (!vertex) {
+            return this.generateUniqueGuests();
+          }
+
+          tableGuests.forEach(tableGuest => {
+            tableGuest.edges.forEach(edge => {
+              if (edge.value.id === vertex.id) {
+                edge.visit(vertex.value);
+              }
+            });
+          });
+
+          visitedVertices.push(vertex);
+          table.chairs.push(new Chair(currentCount, vertex.value));
+          tables[t] = table;
+
+          currentCount++;
+          if (currentCount == shuffledVertices.length) {
+            break;
+          }
+        }
+      }
+      courses.push(new Course(c + 1, tables));
+    }
+    return courses;
+  }
+
+  private generateUniqueTables(): Array<Course> {
+    let tables: Array<Table> = new Array();
+    for (let t = 0; t < this._tableCount; t++) {
+      tables.push(new Table(t, new Array<Chair>()));
+    }
+
+    let tableMap: Map<Guest, Array<Table>> = new Map();
+    this.guests.forEach(guest => {
+      tableMap.set(guest, Array.from(tables));
+    });
+
+    let courses: Array<Course> = new Array();
+    for (let c: number = 0; c < this._courseCount; c++) {
+      let currentCount: number = 0;
+      let courseTables: Array<Table> = new Array();
+      let visitedGuests: Array<Guest> = new Array();
+      while (currentCount < tableMap.size) {
+        for (let t = 0; t < this._tableCount; t++) {
+          let table: Table = courseTables[t];
+          if (!table) {
+            table = new Table(t, new Array());
+          }
+
+          let availableGuests: Array<Guest> = new Array();
+          tableMap.forEach((guestTables: Array<Table>, guest: Guest) => {
+            if (!visitedGuests.find(visitedGuest => visitedGuest.id === guest.id) && guestTables.find(guestTable => guestTable.id === table.id)) {
+              availableGuests.push(guest);
+            }
+          });
+
+          if (availableGuests.length === 0) {
+            return this.generateUniqueTables();
+          }
+
+          let guest: Guest = availableGuests[Math.floor(Math.random() * availableGuests.length)];
+          table.chairs.push(new Chair(currentCount, guest));
+          courseTables[t] = table;
+          visitedGuests.push(guest);
+
+          let guestTable = tableMap.get(guest);
+          guestTable.splice(guestTable.findIndex(element => element.id === table.id), 1);
+
+          currentCount++;
+          if (currentCount == tableMap.size) {
+            break;
+          }
+        }
+      }
+      courses.push(new Course(c + 1, courseTables));
+    }
+    return courses;
+  }
+
+  public allowUniqueGuests(): boolean {
+    if (this._guests.length > this._tableCount) {
+      let guestsPerTable: number = Math.ceil(this._guests.length / this._tableCount);
+      if (guestsPerTable > this._tableCount) {
+        if (this._algorithm == Algorithm.UNIQUE_GUESTS) {
+          this._algorithm = Algorithm.RANDOM;
+        }
+        return false;
+      }
+    }
+    return true;
+  }
+
+  public allowUniqueTables(): boolean {
+    if (this._courseCount <= this._tableCount) {
+      return true;
+    } else {
+      if (this._algorithm == Algorithm.UNIQUE_TABLES) {
+        this._algorithm = Algorithm.RANDOM;
+      }
+      return false;
+    }
+  }
+
   public addGuest(guest: Guest): void {
     this._guests.push(guest);
     this.generateLayout();
@@ -124,7 +300,7 @@ export class TableService {
 
   public removeGuest(id: number): void {
     this._guests.splice(id, 1);
-    if(this._guests.length != 0 && this._guests.length < this._tableCount)
+    if (this._guests.length != 0 && this._guests.length < this._tableCount)
       this._tableCount = this._guests.length;
     this.generateLayout();
   }
@@ -143,8 +319,9 @@ export class TableService {
   }
 
   set courses(value: Array<Course>) {
-    if (this._currentCourse > this._courseCount - 1)
+    if (this._currentCourse > this._courseCount - 1) {
       this._currentCourse = (this._courseCount - 1);
+    }
 
     this._courses = value;
     this.generateLayout();
@@ -165,8 +342,9 @@ export class TableService {
 
   set tableCount(value: number) {
     this._tableCount = value;
-    if(this._guests.length != 0 && this._tableCount > this._guests.length)
+    if (this._guests.length != 0 && this._tableCount > this._guests.length) {
       this._tableCount = this._guests.length;
+    }
     this.generateLayout();
   }
 

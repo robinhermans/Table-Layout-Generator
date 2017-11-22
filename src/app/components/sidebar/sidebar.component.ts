@@ -1,9 +1,9 @@
-import {Component, ViewContainerRef, ChangeDetectionStrategy} from '@angular/core';
-import {MatDialog, MatDialogConfig, MatDialogRef} from '@angular/material';
-import {TableService} from "../../services/table.service";
-import {GuestComponent} from "../guest/guest.component";
-import {PdfService} from "../../services/pdf.service";
-import {Algorithm} from "../../entities/algorithm.enum";
+import { Component, ViewContainerRef, ChangeDetectionStrategy } from '@angular/core';
+import { MatDialog, MatDialogConfig, MatDialogRef } from '@angular/material';
+import { TableService } from "../../services/table.service";
+import { GuestComponent } from "../guest/guest.component";
+import { PdfService } from "../../services/pdf.service";
+import { Algorithm } from "../../entities/algorithm.enum";
 
 @Component({
   selector: 'sidebar-component',
@@ -43,28 +43,6 @@ export class SidebarComponent {
 
   public setActiveAlgorithm(algorithm: string): void {
     this._tableService.algorithm = Algorithm[algorithm];
-  }
-
-  public allowUniqueGuests(): boolean {
-    if (this._tableService.guests.length > this._tableService.tableCount) {
-      let guestsPerTable: number = Math.ceil(this._tableService.guests.length / this._tableService.tableCount);
-      if (guestsPerTable > this._tableService.tableCount) {
-        if (this._tableService.algorithm == Algorithm.UNIQUE_GUESTS)
-          this._tableService.algorithm = Algorithm.RANDOM;
-        return false;
-      }
-    }
-    return true;
-  }
-
-  public allowUniqueTables(): boolean {
-    if (this._tableService.courseCount <= this._tableService.tableCount) {
-      return true;
-    } else {
-      if (this._tableService.algorithm == Algorithm.UNIQUE_TABLES)
-        this._tableService.algorithm = Algorithm.RANDOM;
-      return false;
-    }
   }
 
   get tableService(): TableService {
