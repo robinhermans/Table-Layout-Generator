@@ -40,25 +40,25 @@ export class TableService {
     this._guests.push(new Guest(3, "Four", false, false));
     this._guests.push(new Guest(4, "Five", true, true));
     this._guests.push(new Guest(5, "Six", true, false));
-    this._guests.push(new Guest(7, "Seven", false, true));
-    this._guests.push(new Guest(8, "Eight", true, true));
-    this._guests.push(new Guest(9, "Nine", true, false));
-    this._guests.push(new Guest(10, "Ten", true, true));
-    this._guests.push(new Guest(11, "Eleven", true, true));
-    this._guests.push(new Guest(12, "Twelve", false, true));
+    this._guests.push(new Guest(6, "Seven", false, true));
+    this._guests.push(new Guest(7, "Eight", true, true));
+    this._guests.push(new Guest(8, "Nine", true, false));
+    this._guests.push(new Guest(9, "Ten", true, true));
+    this._guests.push(new Guest(10, "Eleven", true, true));
+    this._guests.push(new Guest(11, "Twelve", false, true));
 
-    this._guests.push(new Guest(13, "Thirteen", true, true));
-    this._guests.push(new Guest(14, "Fourteen", true, true));
-    this._guests.push(new Guest(15, "Fifteen", true, true));
-    this._guests.push(new Guest(16, "Sixteen", false, false));
-    this._guests.push(new Guest(17, "Seventeen", true, true));
-    this._guests.push(new Guest(18, "Eighteen", true, false));
-    this._guests.push(new Guest(19, "Nineteen", false, true));
-    this._guests.push(new Guest(20, "Twenty", true, true));
-    this._guests.push(new Guest(21, "Twenty One", true, false));
-    this._guests.push(new Guest(22, "Twenty Two", true, true));
-    this._guests.push(new Guest(23, "Twenty Three", true, true));
-    this._guests.push(new Guest(24, "Twenty Four", false, true));
+    this._guests.push(new Guest(12, "Thirteen", true, true));
+    this._guests.push(new Guest(13, "Fourteen", true, true));
+    this._guests.push(new Guest(14, "Fifteen", true, true));
+    this._guests.push(new Guest(15, "Sixteen", false, false));
+    this._guests.push(new Guest(16, "Seventeen", true, true));
+    this._guests.push(new Guest(17, "Eighteen", true, false));
+    this._guests.push(new Guest(18, "Nineteen", false, true));
+    this._guests.push(new Guest(19, "Twenty", true, true));
+    this._guests.push(new Guest(20, "Twenty One", true, false));
+    this._guests.push(new Guest(21, "Twenty Two", true, true));
+    this._guests.push(new Guest(22, "Twenty Three", true, true));
+    this._guests.push(new Guest(23, "Twenty Four", false, true));
   }
 
   public redrawLayout(): void {

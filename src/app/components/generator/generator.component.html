@@ -1,0 +1,30 @@
+<div class="container">
+  <header>
+    <h1>Generate Cards</h1>
+    <button mat-button (click)="close()">X</button>
+  </header>
+
+  <hr/>
+
+  <div class="options">
+    <div class="left-container">
+      <canvas #preview id="preview"></canvas>
+    </div>
+    <div class="right-container">
+      <label for="table-prefix">Table prefix</label>
+      <input class="generator-input" id="table-prefix" [(ngModel)]="tablePrefix" (input)="drawPreview()">
+      <label for="card-logo">Logo</label>
+      <input class="generator-input" id="card-logo" type="file" [(ngModel)]="cardLogo" (change)="drawPreview()">
+      <label for="card-logo">Logo position</label>
+      <select class="generator-input" id="logo-position" [(ngModel)]="logoPosition">
+          <option [value]="TOP_LEFT">Top Left</option>
+          <option [value]="TOP_RIGHT">Top Right</option>
+          <option [value]="BOTTOM_LEFT">Bottom Left</option>
+          <option [value]="BOTTOM_RIGHT">Bottom Right</option>
+      </select>
+    </div>
+  </div>
+
+  <hr/>
+  <button mat-button id="generate-cards">Generate Cards</button>
+</div>

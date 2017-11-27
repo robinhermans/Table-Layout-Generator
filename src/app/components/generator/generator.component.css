@@ -1,0 +1,57 @@
+header {
+  display: flex;
+}
+
+h1 {
+  flex: 9;
+  margin: 0;
+  padding: 0;
+}
+
+.close {
+  flex: 1;
+}
+
+.container {
+  width: 600px;
+}
+
+.options {
+  display: flex
+}
+
+.left-container {
+  flex: 6;
+}
+
+.right-container{
+  flex: 4;
+}
+
+label {
+  font-size: 14px;
+}
+
+.generator-input {
+  width: 100%;
+  font-size: 18px;
+  border: 1px solid darkgray;
+  border-radius: 4px;
+  padding: 2px;
+  color: black;
+  margin-bottom: 5px;
+}
+
+.color-option {
+  margin: 10px 0px;
+}
+
+#generate-cards {
+  float: right;
+  color: white;
+  background-color: #34495e;
+}
+
+#preview {
+  width: 95%;
+}

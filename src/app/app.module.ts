@@ -11,6 +11,7 @@ import {SidebarComponent} from "./components/sidebar/sidebar.component";
 import {TableService} from "./services/table.service";
 import {GuestComponent} from "./components/guest/guest.component";
 import {ReversePipe} from "./pipes/reverse.pipe";
+import {GeneratorComponent} from "./components/generator/generator.component";
 import {PdfService} from "./services/pdf.service";
 
 @NgModule({
@@ -19,6 +20,7 @@ import {PdfService} from "./services/pdf.service";
     CanvasComponent,
     SidebarComponent,
     GuestComponent,
+    GeneratorComponent,
     ReversePipe
   ],
   imports: [
@@ -37,7 +39,8 @@ import {PdfService} from "./services/pdf.service";
     MatCheckboxModule
   ],
   entryComponents: [
-    GuestComponent
+    GuestComponent,
+    GeneratorComponent
   ],
   providers: [
     TableService,

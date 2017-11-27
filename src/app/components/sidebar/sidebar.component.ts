@@ -4,6 +4,7 @@ import { TableService } from "../../services/table.service";
 import { GuestComponent } from "../guest/guest.component";
 import { PdfService } from "../../services/pdf.service";
 import { Algorithm } from "../../entities/algorithm.enum";
+import { GeneratorComponent } from '../generator/generator.component';
 
 @Component({
   selector: 'sidebar-component',
@@ -13,7 +14,8 @@ import { Algorithm } from "../../entities/algorithm.enum";
 })
 export class SidebarComponent {
 
-  private _dialogRef: MatDialogRef<GuestComponent>;
+  private _guestDialogRef: MatDialogRef<GuestComponent>;
+  private _generatorDialogRef: MatDialogRef<GeneratorComponent>;
   private _dialog: MatDialog;
   private _viewContainerRef: ViewContainerRef;
   private _tableService: TableService;
@@ -29,11 +31,22 @@ export class SidebarComponent {
     let config = new MatDialogConfig();
     config.viewContainerRef = this._viewContainerRef;
 
-    this._dialogRef = this._dialog.open(GuestComponent, config);
+    this._guestDialogRef = this._dialog.open(GuestComponent, config);
 
-    this._dialogRef.afterClosed().subscribe(result => {
+    this._guestDialogRef.afterClosed().subscribe(result => {
       this._tableService.redrawLayout();
-      this._dialogRef = null;
+      this._guestDialogRef = null;
+    });
+  }
+
+  public openGeneratorDialog(): void {
+    let config = new MatDialogConfig();
+    config.viewContainerRef = this._viewContainerRef;
+
+    this._generatorDialogRef = this._dialog.open(GeneratorComponent, config);
+
+    this._generatorDialogRef.afterClosed().subscribe(result => {
+      this._generatorDialogRef = null;
     });
   }
 
