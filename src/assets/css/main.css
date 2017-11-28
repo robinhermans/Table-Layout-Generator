@@ -11,6 +11,11 @@ html, body{
   background-color: #34495e;
 }
 
+canvas {
+  /* Force loading the cards font */
+  font-family: 'Amatic SC', sans-serif;
+}
+
 mat-slider {
   width: 100%;
 }

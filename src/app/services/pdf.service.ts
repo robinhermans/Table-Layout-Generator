@@ -3,6 +3,7 @@ import {Injectable} from '@angular/core';
 import {Course} from "../entities/course.entity";
 import {Table} from "../entities/table.entity";
 import {Guest} from "../entities/guest.entity";
+import {Position} from "../entities/position.enum"
 
 declare let jsPDF;
 
@@ -16,7 +17,7 @@ export class PdfService {
   }
 
   // WORK IN PROGRESS. NEEDS A CLEANUP
-  public generatePdf(): void {
+  public generatePdf(tabblePrefix: String, cardBackground: any, backgroundPosition: Position): void {
     var doc = new jsPDF();
 
     doc.setFontSize(18);

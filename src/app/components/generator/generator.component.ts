@@ -1,8 +1,8 @@
 import { Component, ViewChild, ElementRef } from '@angular/core';
 import { MatDialogRef } from '@angular/material';
-import { TableService } from "../../services/table.service";
+import { PdfService } from "../../services/pdf.service";
 import { Guest } from "../../entities/guest.entity";
-import { Logo } from '../../entities/logo.enum';
+import { Position } from '../../entities/position.enum';
 
 @Component({
   selector: 'generator-component',
@@ -15,19 +15,20 @@ export class GeneratorComponent {
   private _preview: ElementRef;
 
   private _dialogReference: MatDialogRef<GeneratorComponent>;
-  private _tableService: TableService;
+  private _pdfService: PdfService;
   private _tablePrefix: String;
-  private _cardLogo: any;
-  private _logoPosition: Logo;
+  private _cardBackground: any;
+  private _backgroundPosition: Position;
   private _context: CanvasRenderingContext2D;
   private _width: number;
   private _height: number;
   private _borderImage: any;
 
-  constructor(dialogReference: MatDialogRef<GeneratorComponent>, tableService: TableService) {
+  constructor(dialogReference: MatDialogRef<GeneratorComponent>, pdfService: PdfService) {
     this._dialogReference = dialogReference;
-    this._tableService = tableService;
+    this._pdfService = pdfService;
     this._tablePrefix = "Table";
+    this._backgroundPosition = Position.TOP_LEFT;
   }
 
   private ngAfterViewInit(): void {
@@ -43,28 +44,79 @@ export class GeneratorComponent {
     this._borderImage.onload = function () {
       self.drawPreview();
     }
-    this._borderImage.src = "assets/images/border.png"
+    this._borderImage.src = "assets/images/border.svg"
   }
 
   public drawPreview(): void {
-    console.log(this._cardLogo);
     this._context.clearRect(0, 0, this._width, this._height);
+
+    if (this._cardBackground) {
+      let w, h = 0;
+      if (this._cardBackground.width >= this._cardBackground.height) {
+        let aspectRatio = this._cardBackground.height / this._cardBackground.width;
+        w = this._width * 0.15;
+        h = w * aspectRatio;
+      } else {
+        let aspectRatio = this._cardBackground.width / this._cardBackground.height;
+        h = this._height * 0.15;
+        w = h * aspectRatio;
+      }
+
+      switch (this._backgroundPosition) {
+        case Position.TOP_LEFT:
+          this._context.drawImage(this._cardBackground, 20, 10, w, h);
+          break;
+        case Position.TOP_RIGHT:
+          this._context.drawImage(this._cardBackground, this._width - (w + 20), 10, w, h);
+          break;
+        case Position.BOTTOM_LEFT:
+          this._context.drawImage(this._cardBackground, 50, this._height - (h + 25), w, h);
+          break;
+        case Position.BOTTOM_RIGHT:
+          this._context.drawImage(this._cardBackground, this._width - (w + 50), this._height - (h + 25), w, h);
+          break;
+      }
+    }
 
     this._context.drawImage(this._borderImage, (this._width / 2) - 140, this._height - 25, 280, 20);
 
     this._context.textAlign = "center";
     this._context.fillStyle = "black";
     this._context.font = "bold 24px Amatic SC";
-    this._context.fillText("Guest One", (this._width /2), 40);
-    this._context.fillText("Guest Two", (this._width /2), 75);
-    this._context.fillText("Guest Three", (this._width /2), 110);
+    this._context.fillText("Guest One", (this._width / 2), 40);
+    this._context.fillText("Guest Two", (this._width / 2), 75);
+    this._context.fillText("Guest Three", (this._width / 2), 110);
 
     this._context.font = "bolder 18px Amatic SC";
-    this._context.fillText(this._tablePrefix + " " + 1, (this._width * 0.25), this._height - 20);
+    let wPos = this._backgroundPosition === Position.BOTTOM_LEFT ? 0.75 : 0.25
+    this._context.fillText(this._tablePrefix + " " + 1, (this._width * wPos), this._height - 20);
 
     this._context.fillStyle = "black";
     this._context.rect(0, 0, this._width, this._height);
     this._context.stroke();
+  }
+
+  public uploadImage(event): void {
+    var reader = new FileReader();
+    let self = this;
+    reader.onload = function (e) {
+      var src = e.target['result'];
+      self._cardBackground = new Image();
+      self._cardBackground.onload = function () {
+        self.drawPreview();
+      }
+      self._cardBackground.src = src;
+    }
+    reader.readAsDataURL(event.target.files[0]);
+  }
+
+  public setPosition(position: string) {
+    this._backgroundPosition = Position[position];
+    this.drawPreview();
+  }
+
+  public generateCards(): void {
+    this._pdfService.generatePdf(this._tablePrefix, this._cardBackground, this._backgroundPosition);
   }
 
   public close(): void {
@@ -79,27 +131,19 @@ export class GeneratorComponent {
     this._tablePrefix = tablePrefix;
   }
 
-  get cardLogo(): any {
-    return this._cardLogo
+  get cardBackground(): any {
+    return this._cardBackground
   }
 
-  set cardLogo(cardLogo: any) {
-    this._cardLogo = cardLogo;
+  set cardBackground(cardBackground: any) {
+    this._cardBackground = cardBackground;
   }
 
-  get logoPosition(): Logo {
-    return this._logoPosition
+  get backgroundPosition(): Position {
+    return this._backgroundPosition
   }
 
-  set logoPosition(logoPosition: Logo) {
-    this._logoPosition = logoPosition;
-  }
-
-  get tableService(): TableService {
-    return this._tableService;
-  }
-
-  set tableService(value: TableService) {
-    this._tableService = value;
+  set backgroundPosition(backgroundPosition: Position) {
+    this._backgroundPosition = backgroundPosition;
   }
 }

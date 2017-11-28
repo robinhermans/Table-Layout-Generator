@@ -1,4 +1,4 @@
-export enum Logo {
+export enum Position {
   TOP_LEFT,
   TOP_RIGHT,
   BOTTOM_LEFT,
