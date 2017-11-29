@@ -108,7 +108,7 @@ export class TableService {
       for (let t = 0; t < this._tableCount; t++) {
         let table: Table = tables[t];
         if (!table) {
-          table = new Table(t + 1, new Array());
+          table = new Table(t, new Array());
         }
 
         table.chairs.push(new Chair(currentCount, shuffledGuests[currentCount]));

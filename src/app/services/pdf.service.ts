@@ -19,55 +19,46 @@ export class PdfService {
   // WORK IN PROGRESS. NEEDS A CLEANUP
   public generatePdf(tabblePrefix: String, cardBackground: any, backgroundPosition: Position): void {
     var doc = new jsPDF();
+    doc.addFont('AmaticSC-Bold.ttf', 'Amatic SC', 'bold');
+    doc.setFont('Amatic SC', 'bold');
+    
+    let layout: Map<number, Array<Map<number, Guest>>> = this.generateTableLayout();
 
-    doc.setFontSize(18);
-    doc.setFontStyle("italic");
-    doc.text('Table Layout', 10, 10);
+    let nameFontSize = 24;
+    let tableFontSize = 18;
 
-    let y = 20;
+    let namesPerCard = this._tableService.courseCount;
+    let cardSize = namesPerCard * (nameFontSize + (nameFontSize/2)) + 100;
 
-    for (let c = 0; c < this._tableService.courses.length; c++) {
+    doc.save('table-cards.pdf')
+  }
+
+  private generateTableLayout(): Map<number, Array<Map<number, Guest>>> {
+    let layout: Map<number, Array<Map<number, Guest>>> = new Map();
+
+    for(let c = 0; c < this._tableService.courses.length; c++){
       let course: Course = this._tableService.courses[c];
-      doc.setFontSize(11);
-      doc.text('Course ' + (c + 1), 10, y);
-      y += 7;
-
-      let x = 10;
-      for (let t = 0; t < course.tables.length; t++) {
-        let originalY = y;
-
+      for(let t = 0; t < course.tables.length; t++){
         let table: Table = course.tables[t];
-        doc.setFontSize(11);
-        doc.text('Table ' + (t + 1), x, y);
-        y += 5;
+        let cards: Array<Map<number, Guest>> = layout.get(table.id);
+        if(!cards){
+          cards = new Array();
+        }      
 
-        doc.setFontStyle("normal");
-        for (let g = 0; g < table.chairs.length; g++) {
-          let guest: Guest = table.chairs[g].guest;
-          doc.setFontSize(8);
-          doc.text(guest.name, x, y);
-          y += 3;
-        }
-        if (x > 150) {
-          y += 4;
-          x = 10;
-        } else {
-          if (t < course.tables.length - 1)
-            y = originalY;
-          x += 50;
-        }
-        doc.setFontStyle("italic");
-      }
-      y += 7;
+        for(let g = 0; g < table.chairs.length; g++){
+          let card: Map<number, Guest> = cards[g];
+          if(!card){
+            card = new Map();
+          }
 
-      if((c+1) % 3 == 0 && (c < this._tableService.courses.length - 1)) {
-        doc.addPage();
-        x = 10;
-        y = 20;
-      }
+          card.set(c, table.chairs[g].guest);
+          cards[g] = card;
+        }
+        layout.set(table.id, cards);
+      }    
     }
 
-    doc.save('table-layout.pdf')
+    return layout;
   }
 
 }
