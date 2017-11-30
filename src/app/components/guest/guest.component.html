@@ -1,6 +1,7 @@
 <div class="container">
   <header>
     <h1>Guests</h1>
+    <button mat-button (click)="tableService.loadTestData()" [disabled]="tableService.guests.length > 0">Load Test Data</button>
     <button mat-button (click)="openFileDialog()">Import</button>
     <input #file id="file" type="file" (change)="import($event)"/>
     <button mat-button (click)="export()" [disabled]="tableService.guests.length == 0">Export</button>

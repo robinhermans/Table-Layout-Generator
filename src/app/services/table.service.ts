@@ -29,11 +29,10 @@ export class TableService {
     this._algorithm = Algorithm.RANDOM;
     this._courseSubject = new Subject();
 
-    this.loadTestData();
     this.generateLayout();
   }
 
-  private loadTestData(): void {
+  public loadTestData(): void {
     this._guests.push(new Guest(0, "One", true, true));
     this._guests.push(new Guest(1, "Two", true, true));
     this._guests.push(new Guest(2, "Three", true, true));
@@ -59,6 +58,8 @@ export class TableService {
     this._guests.push(new Guest(21, "Twenty Two", true, true));
     this._guests.push(new Guest(22, "Twenty Three", true, true));
     this._guests.push(new Guest(23, "Twenty Four", false, true));
+
+    this.generateLayout();
   }
 
   public redrawLayout(): void {

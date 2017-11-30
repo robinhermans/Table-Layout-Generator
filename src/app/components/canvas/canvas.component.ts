@@ -82,6 +82,21 @@ export class CanvasComponent {
   private draw() {
     this._context.clearRect(0, 0, this._width, this._height);
 
+    let currentCourse: Course = this._tableService.courses[this._tableService.currentCourse];
+    let tables: Array<Table> = currentCourse.tables;
+    let tableCount: number = tables.length;
+    let yStep: number = this._height / 3;
+    let xStep: number = this._width / Math.ceil(tableCount / 3);
+    let currentCount: number = 0;
+
+    if(currentCourse.tables.length == 0){
+      this._context.fillStyle = "black";
+      this._context.font = "32px Roboto";
+      this._context.textAlign = "center";
+      this._context.fillText("Please add some guests", this._width/2, this.height/2);
+      return;
+    }
+
     this._context.fillStyle = "black";
     this._context.font = "14px Roboto";
     this._context.textAlign = "left";
@@ -99,21 +114,6 @@ export class CanvasComponent {
 
     this._context.fillText("All", 20, 79);
     this._context.drawImage(this._allImage, 0, 65);
-
-    let currentCourse: Course = this._tableService.courses[this._tableService.currentCourse];
-    let tables: Array<Table> = currentCourse.tables;
-    let tableCount: number = tables.length;
-    let yStep: number = this._height / 3;
-    let xStep: number = this._width / Math.ceil(tableCount / 3);
-    let currentCount: number = 0;
-
-    if(currentCourse.tables.length == 0){
-      this._context.fillStyle = "black";
-      this._context.font = "32px Roboto";
-      this._context.textAlign = "center";
-      this._context.fillText("Please add some guests", this._width/2, this.height/2);
-      return;
-    }
 
     while (currentCount < tableCount) {
 

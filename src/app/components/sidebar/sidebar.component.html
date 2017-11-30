@@ -55,6 +55,6 @@
 </div>
 
 <h3>Export</h3>
-<button mat-button (click)="openGeneratorDialog()">Generate Cards</button>
+<button mat-button (click)="openGeneratorDialog()" [disabled]="tableService.guests.length == 0">Generate Cards</button>
 
 
