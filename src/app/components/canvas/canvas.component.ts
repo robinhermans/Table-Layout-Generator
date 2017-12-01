@@ -1,8 +1,8 @@
-import {Component, ViewChild, ElementRef, HostListener} from '@angular/core';
-import {TableService} from "../../services/table.service";
-import {Table} from "../../entities/table.entity";
-import {Course} from "../../entities/course.entity";
-import {Chair} from "../../entities/chair.entity";
+import { Component, ViewChild, ElementRef, HostListener } from '@angular/core';
+import { TableService } from "../../services/table.service";
+import { Table } from "../../entities/table.entity";
+import { Course } from "../../entities/course.entity";
+import { Chair } from "../../entities/chair.entity";
 
 @Component({
   selector: 'canvas-component',
@@ -89,11 +89,11 @@ export class CanvasComponent {
     let xStep: number = this._width / Math.ceil(tableCount / 3);
     let currentCount: number = 0;
 
-    if(currentCourse.tables.length == 0){
+    if (currentCourse.tables.length == 0) {
       this._context.fillStyle = "black";
       this._context.font = "32px Roboto";
       this._context.textAlign = "center";
-      this._context.fillText("Please add some guests", this._width/2, this.height/2);
+      this._context.fillText("Please add some guests", this._width / 2, this.height / 2);
       return;
     }
 
@@ -123,7 +123,7 @@ export class CanvasComponent {
       } else {
         if (tables.length == 2) {
           this.drawTable(xStep / 2, yStep, tables[currentCount]);
-          this.drawTable(xStep / 2, yStep * 2, tables[currentCount+1]);
+          this.drawTable(xStep / 2, yStep * 2, tables[currentCount + 1]);
           currentCount += 2;
           break;
         } else {
@@ -152,14 +152,14 @@ export class CanvasComponent {
     this._context.shadowBlur = 10;
     this._context.shadowColor = "black";
     this._context.translate(x, y);
-    this._context.rotate(((Math.PI/ 4) * randomRotate));
+    this._context.rotate(((Math.PI / 4) * randomRotate));
     this._context.drawImage(this._tableImage, - 64, - 64);
     this._context.restore();
 
     this._context.fillStyle = "white";
     this._context.font = "24px Roboto";
     this._context.textAlign = "center";
-    this._context.fillText("Table " + table.id, x, y + 8);
+    this._context.fillText("Table " + (table.id + 1), x, y + 8);
 
     let rotation: number = Math.PI / 4;
     let step = Math.PI * 2 / table.chairs.length;
@@ -180,16 +180,16 @@ export class CanvasComponent {
       this._context.drawImage(this._chairImage, 70, -16);
       this._context.drawImage(this._plateImage, 45, -9);
 
-      if(chair.guest.eatsFish && chair.guest.eatsMeat){
+      if (chair.guest.eatsFish && chair.guest.eatsMeat) {
         this._context.drawImage(this._allImage, 45, -9);
       }
-      if(chair.guest.eatsFish && !chair.guest.eatsMeat){
+      if (chair.guest.eatsFish && !chair.guest.eatsMeat) {
         this._context.drawImage(this._fishImage, 45, -9);
       }
-      if(!chair.guest.eatsFish && chair.guest.eatsMeat){
+      if (!chair.guest.eatsFish && chair.guest.eatsMeat) {
         this._context.drawImage(this._meatImage, 45, -9);
       }
-      if(!chair.guest.eatsFish && !chair.guest.eatsMeat){
+      if (!chair.guest.eatsFish && !chair.guest.eatsMeat) {
         this._context.drawImage(this._vegiImage, 45, -9);
       }
 

@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { MatSnackBar } from '@angular/material';
 import { Subject } from 'rxjs/Subject'
 import { Course } from "../entities/course.entity";
 import { Guest } from "../entities/guest.entity";
@@ -19,13 +20,17 @@ export class TableService {
   private _courseCount: number;
   private _algorithm: Algorithm;
   private _courseSubject: Subject<Array<Course>>;
+  private _snackbar: MatSnackBar;
+  private _maxRetries: number;
 
-  constructor() {
+  constructor(snackBar: MatSnackBar) {
     this._guests = new Array();
     this._courses = new Array();
     this._currentCourse = 0;
     this._tableCount = 3;
     this._courseCount = 3;
+    this._snackbar = snackBar;
+    this._maxRetries = 1000;
     this._algorithm = Algorithm.RANDOM;
     this._courseSubject = new Subject();
 
@@ -74,59 +79,65 @@ export class TableService {
     if (this.guests != null && this.guests.length > 0) {
       switch (this._algorithm) {
         case Algorithm.RANDOM:
-          for (let c: number = 0; c < this._courseCount; c++) {
-            this._courses.push(new Course(c + 1, this.generateRandom()));
-          }
+          this._courses = this.generateRandom();
           break;
         case Algorithm.UNIQUE_TABLES:
-          this._courses = this.generateUniqueTables();
+          this._courses = this.generateUniqueTables(0);
           break;
         case Algorithm.UNIQUE_GUESTS:
-          this._courses = this.generateUniqueGuests();
+          this._courses = this.generateUniqueGuests(0);
           break;
       }
     } else {
       for (let c: number = 0; c < this._courseCount; c++) {
-        this._courses.push(new Course(c, new Array()));
+        this._courses.push(new Course(c + 1, new Array()));
       }
     }
 
     this._courseSubject.next(this._courses);
   }
 
-  private generateRandom(): Array<Table> {
-    let shuffledGuests = Array.from(this._guests);
+  private generateRandom(): Array<Course> {
+    let courses = new Array();
+    for (let c: number = 0; c < this._courseCount; c++) {
+      let shuffledGuests = Array.from(this._guests);
 
-    for (let i = shuffledGuests.length; i; i--) {
-      let j = Math.floor(Math.random() * i);
-      [shuffledGuests[i - 1], shuffledGuests[j]] = [shuffledGuests[j], shuffledGuests[i - 1]];
-    }
+      for (let i = shuffledGuests.length; i; i--) {
+        let j = Math.floor(Math.random() * i);
+        [shuffledGuests[i - 1], shuffledGuests[j]] = [shuffledGuests[j], shuffledGuests[i - 1]];
+      }
 
-    let tables: Array<Table> = new Array();
-    let currentCount: number = 0;
+      let tables: Array<Table> = new Array();
+      let currentCount: number = 0;
 
-    while (currentCount < shuffledGuests.length) {
-      for (let t = 0; t < this._tableCount; t++) {
-        let table: Table = tables[t];
-        if (!table) {
-          table = new Table(t, new Array());
-        }
+      while (currentCount < shuffledGuests.length) {
+        for (let t = 0; t < this._tableCount; t++) {
+          let table: Table = tables[t];
+          if (!table) {
+            table = new Table(t, new Array());
+          }
 
-        table.chairs.push(new Chair(currentCount, shuffledGuests[currentCount]));
+          table.chairs.push(new Chair(currentCount, shuffledGuests[currentCount]));
 
-        tables[t] = table;
+          tables[t] = table;
 
-        currentCount++;
-        if (currentCount == shuffledGuests.length) {
-          break;
+          currentCount++;
+          if (currentCount == shuffledGuests.length) {
+            break;
+          }
         }
       }
+      courses.push(new Course(c + 1, tables));
     }
-
-    return tables;
+    return courses;
   }
 
-  private generateUniqueGuests(): Array<Course> {
+  private generateUniqueGuests(recursiveCount: number): Array<Course> {
+    if (this.checkMaxRetries(recursiveCount)) {
+      this._algorithm = Algorithm.RANDOM;
+      return this.generateRandom();
+    }
+
     let graph: Graph = new Graph(0, new Array());
 
     let vertices: Array<Vertex> = new Array();
@@ -191,7 +202,7 @@ export class TableService {
           }
 
           if (!vertex) {
-            return this.generateUniqueGuests();
+            return this.generateUniqueGuests(recursiveCount + 1);
           }
 
           tableGuests.forEach(tableGuest => {
@@ -217,7 +228,12 @@ export class TableService {
     return courses;
   }
 
-  private generateUniqueTables(): Array<Course> {
+  private generateUniqueTables(recursiveCount: number): Array<Course> {
+    if (this.checkMaxRetries(recursiveCount)) {
+      this._algorithm = Algorithm.RANDOM;
+      return this.generateRandom();
+    }
+
     let tables: Array<Table> = new Array();
     for (let t = 0; t < this._tableCount; t++) {
       tables.push(new Table(t, new Array<Chair>()));
@@ -248,7 +264,7 @@ export class TableService {
           });
 
           if (availableGuests.length === 0) {
-            return this.generateUniqueTables();
+            return this.generateUniqueTables(recursiveCount + 1);
           }
 
           let guest: Guest = availableGuests[Math.floor(Math.random() * availableGuests.length)];
@@ -270,28 +286,37 @@ export class TableService {
     return courses;
   }
 
-  public allowUniqueGuests(): boolean {
-    if (this._guests.length > this._tableCount) {
-      let guestsPerTable: number = Math.ceil(this._guests.length / this._tableCount);
-      if (guestsPerTable > this._tableCount) {
-        if (this._algorithm == Algorithm.UNIQUE_GUESTS) {
-          this._algorithm = Algorithm.RANDOM;
-        }
-        return false;
-      }
+  private checkMaxRetries(recursiveCount: number): boolean {
+    if (recursiveCount >= this._maxRetries) {
+      this._snackbar.open('Unable to generate a table layout, Algorithm was unable to find solution.', null, {
+        duration: 5000,
+        extraClasses: ['error-message'],
+      });
+      return true;
     }
-    return true;
+    return false;
+  }
+
+  public allowUniqueGuests(): boolean {
+    let guestsPerTable: number = Math.ceil(this._guests.length / this._tableCount);
+    if (guestsPerTable <= (this.courseCount === 1 ? guestsPerTable : this._tableCount) && this._courseCount <= (this._tableCount * guestsPerTable)) {
+      return true;
+    }
+    if (this._algorithm == Algorithm.UNIQUE_GUESTS) {
+      this._algorithm = Algorithm.RANDOM;
+    }
+    return false;
   }
 
   public allowUniqueTables(): boolean {
     if (this._courseCount <= this._tableCount) {
       return true;
-    } else {
-      if (this._algorithm == Algorithm.UNIQUE_TABLES) {
-        this._algorithm = Algorithm.RANDOM;
-      }
-      return false;
     }
+
+    if (this._algorithm == Algorithm.UNIQUE_TABLES) {
+      this._algorithm = Algorithm.RANDOM;
+    }
+    return false;
   }
 
   public addGuest(guest: Guest): void {

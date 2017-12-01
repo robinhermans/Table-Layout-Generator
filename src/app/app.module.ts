@@ -5,7 +5,7 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {BrowserModule} from '@angular/platform-browser';
 import {HttpModule} from '@angular/http';
-import {MatFormFieldModule, MatInputModule, MatOptionModule, MatSelectModule, MatDialogModule, MatSliderModule, MatButtonModule, MatCheckboxModule} from "@angular/material";
+import {MatFormFieldModule, MatInputModule, MatOptionModule, MatSelectModule, MatDialogModule, MatSliderModule, MatButtonModule, MatCheckboxModule, MatSnackBarModule} from "@angular/material";
 import {CanvasComponent} from "./components/canvas/canvas.component";
 import {SidebarComponent} from "./components/sidebar/sidebar.component";
 import {TableService} from "./services/table.service";
@@ -36,7 +36,8 @@ import {PdfService} from "./services/pdf.service";
     MatDialogModule,
     MatSliderModule,
     MatButtonModule,
-    MatCheckboxModule
+    MatCheckboxModule,
+    MatSnackBarModule
   ],
   entryComponents: [
     GuestComponent,

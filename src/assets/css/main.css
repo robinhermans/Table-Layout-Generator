@@ -20,6 +20,11 @@ mat-slider {
   width: 100%;
 }
 
+.error-message{
+  background-color: #963636;
+  color: white;
+}
+
 #loader {
   color: white;
   width: 300px;
