@@ -10,7 +10,7 @@ import { GeneratorComponent } from '../generator/generator.component';
   selector: 'sidebar-component',
   styleUrls: ['./sidebar.component.css'],
   templateUrl: './sidebar.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.Default
 })
 export class SidebarComponent {
 
