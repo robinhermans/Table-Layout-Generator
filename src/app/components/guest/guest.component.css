@@ -64,7 +64,7 @@ th {
 .name-input {
   width: 95%;
   font-size: 18px;
-  border: none;
+  border: 1px solid #888888;
   border-radius: 4px;
   color: #767676
 }

@@ -9,6 +9,7 @@ import { Graph } from "../entities/graph.entity";
 import { Vertex } from "../entities/vertex.entity";
 import { Edge } from "../entities/edge.entity";
 import { Chair } from "../entities/chair.entity";
+import { Factorial } from "../services/factorial.utils";
 
 @Injectable()
 export class TableService {
@@ -288,7 +289,7 @@ export class TableService {
 
   private checkMaxRetries(recursiveCount: number): boolean {
     if (recursiveCount >= this._maxRetries) {
-      this._snackbar.open('Unable to generate a table layout, Algorithm was unable to find solution.', null, {
+      this._snackbar.open("Unable to generate a table layout. Algorithm didn't find a suitable solution.", null, {
         duration: 5000,
         extraClasses: ['error-message'],
       });
@@ -298,18 +299,26 @@ export class TableService {
   }
 
   public allowUniqueGuests(): boolean {
-    let guestsPerTable: number = Math.ceil(this._guests.length / this._tableCount);
-    if (guestsPerTable <= (this.courseCount === 1 ? guestsPerTable : this._tableCount) && this._courseCount <= (this._tableCount * guestsPerTable)) {
-      return true;
-    }
-    if (this._algorithm == Algorithm.UNIQUE_GUESTS) {
-      this._algorithm = Algorithm.RANDOM;
-    }
-    return false;
+    // let guestsPerTable: number = Math.ceil(this._guests.length / this._tableCount);
+    // if (this._courseCount <= (new Factorial().getCombinations(this._guests.length, guestsPerTable) / (this._guests.length / guestsPerTable))) {
+    //   return true;
+    // }
+
+    // if (this._algorithm == Algorithm.UNIQUE_GUESTS) {
+    //   this._algorithm = Algorithm.RANDOM;
+    // }
+    // return false;
+    
+    /**
+     * Temporarily disabled while waiting for an answer on
+     * https://math.stackexchange.com/questions/2554403/calculate-unique-combinations-for-unique-guests-per-table-contraint
+     */
+    return this.courseCount == 1;
   }
 
   public allowUniqueTables(): boolean {
-    if (this._courseCount <= this._tableCount) {
+    let guestsPerTable: number = Math.ceil(this._guests.length / this._tableCount);
+    if (this._courseCount <= (this._guests.length / guestsPerTable)) {
       return true;
     }
 
